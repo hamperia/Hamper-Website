@@ -1,0 +1,68 @@
+/* Warm editorial palette */
+:root {
+  --cream: #fbf8f3;
+  --paper: #fffdf9;
+  --brown: #4b332c;
+  --rose: #cf8b83;
+  --rose-dark: #9d5d59;
+  --gold: #c7a56a;
+  --ink: #302a27;
+  --muted: #766c66;
+  --line: #e7ddd3;
+  --sage: #7b8a79;
+}
+
+.announcement {
+  background: #513832;
+  color: #fffaf3;
+}
+
+.header {
+  background: rgba(251, 248, 243, 0.94);
+}
+
+.ribbon {
+  background: #f2e9df;
+}
+
+.why {
+  background: #eee6dd;
+}
+
+.button:hover {
+  background: #765348;
+}
+
+.button.secondary:hover {
+  background: #f1e5dc;
+}
+
+.photo-note {
+  background: var(--cream);
+}
+
+.micro-note span,
+.why-item .number {
+  color: var(--sage);
+}
+
+.inquiry,
+.product {
+  background: var(--paper);
+}
+
+.brand-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  flex: 0 0 58px;
+}
+
+@media (max-width: 760px) {
+  .brand-logo {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+}
