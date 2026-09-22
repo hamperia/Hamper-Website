@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      Create an account | Hamperia Solutions
+    </title>
+    <meta name="description" content="Sign in securely with Google to manage your Hamperia Solutions account.">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/branding.css">
+    <link rel="stylesheet" href="../../css/auth.css">
+    <script src="../../js/main.js" defer>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer>
+    </script>
+    <script src="../../js/auth.js" defer>
+    </script>
+    <link rel="stylesheet" href="../../css/storefront.css">
+    <script src="../../js/storefront.js" defer>
+    </script>
+    <meta name="robots" content="noindex,follow">
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
+    <div class="announcement">Little moments. Big happiness. · Personalised gifts & thoughtful supplies</div><header class="header"><div class="wrap nav-row"><a class="brand" href="../../" aria-label="Hamperia Solutions home"><img class="brand-logo" src="../../assets/logo.png" alt="" width="58" height="58"><span class="brand-name">Hamperia<small>SOLUTIONS</small></span></a><button class="menu" aria-controls="navigation" aria-expanded="false" type="button">Menu ☰</button><nav class="nav-links" id="navigation" aria-label="Main navigation"><a href="../../hamperia/">Hamperia Store</a><a href="../../hampers/">Personalised Hampers</a><details class="corporate-menu"><summary>Corporate & Bulk Gifting</summary><div class="mega-menu"><a class="mega-overview" href="../../corporate-bulk-gifting/">Explore corporate & bulk gifting →</a><div class="mega-grid"><div><a class="mega-title" href="../../corporate-gifting/">Corporate Gifting</a><a href="../../employee-gifts/">Employee gifts</a><a href="../../client-gifts/">Client gifts</a><a href="../../bulk-gifting/">Bulk gifting</a><a href="../../corporate-merchandise/">Corporate merchandise</a></div><div><a class="mega-title" href="../../employee-welcome-kits/">Employee Welcome Gifts</a><a href="../../onboarding-kits/">Onboarding kits</a></div><div><a class="mega-title" href="../../diwali-gifts/">Diwali Gifts</a><a href="../../corporate-diwali-gifts/">Corporate Diwali gifts</a><a href="../../diwali-gifts-for-employees/">Diwali gifts for employees</a><a href="../../diwali-gifts-for-clients/">Diwali gifts for clients</a><a href="../../bulk-diwali-gifts/">Bulk Diwali gifts</a></div><div><a class="mega-title" href="../../gift-hampers/">Gift Hampers</a><a href="../../dry-fruit-hampers/">Dry fruit hampers</a><a href="../../chocolate-hampers/">Chocolate hampers</a><a href="../../gourmet-hampers/">Gourmet hampers</a><a href="../../healthy-hampers/">Healthy hamper ideas</a><a href="../../wellness-hampers/">Wellness hampers</a></div><div><a class="mega-title" href="../../shop-by-budget/">Shop by Budget</a><a href="../../gifts-under-500/">Gifts under ₹500</a><a href="../../gifts-under-1000/">Gifts under ₹1,000</a><a href="../../gifts-under-1500/">Gifts under ₹1,500</a><a href="../../gifts-under-2000/">Gifts under ₹2,000</a><a href="../../gifts-under-2500/">Gifts under ₹2,500</a></div></div></div></details><a href="../../tutorials/">Learn to Make</a><a href="../../blog/">Blog</a></nav><div class="auth-controls" aria-label="Account"><a class="auth-link auth-guest" href="../../auth/">Sign in</a><details class="auth-user profile-menu" hidden><summary class="profile-trigger"><svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.3"></circle><path d="M5.5 20c.6-3.5 3-5.5 6.5-5.5s5.9 2 6.5 5.5"></path></svg><span class="auth-user-name" aria-label="Signed in as"></span><span class="profile-chevron" aria-hidden="true">⌄</span></summary><div class="profile-dropdown"><a data-auth-dashboard href="../../account/">My account</a><button data-signout type="button">Sign out</button></div></details></div></div></header>
+    <main id="main">
+      <section class="wrap page-intro">
+        <div class="breadcrumb">
+          <a href="../../">
+            Home
+          </a>
+          &nbsp; / &nbsp; Create an account
+        </div>
+        <p class="eyebrow">
+          A little happiness, saved for you
+        </p>
+        <h1>
+          Join Hamperia.
+        </h1>
+        <p class="description">
+          Create a customer account or request access as a product host.
+        </p>
+      </section>
+      <section class="auth-panel">
+        <h2 data-signup-heading>
+          Create your account
+        </h2>
+        <p data-signup-description>
+          Start with Google to fill your name and email, or enter your details below.
+        </p>
+        <div data-google-signup-intro>
+          <button class="button google-button" data-google-signup type="button">
+            Sign up with Google
+          </button>
+          <div class="auth-divider">
+            <span>
+              or enter your details
+            </span>
+          </div>
+        </div>
+        <form data-email-signup-form>
+          <label class="inline-label" for="signup-name">
+            Full name
+          </label>
+          <input id="signup-name" name="full_name" autocomplete="name" required maxlength="100">
+          <label class="inline-label" for="signup-email">
+            Email
+          </label>
+          <input id="signup-email" name="email" type="email" autocomplete="email" required>
+          <label class="inline-label" for="signup-password">
+            Password
+          </label>
+          <input id="signup-password" name="password" type="password" minlength="8" autocomplete="new-password" aria-describedby="password-help" required>
+          <p id="password-help" class="form-help">
+            At least 8 characters. Create a separate password for Hamperia; do not enter your Google password.
+          </p>
+          <label class="inline-label" for="signup-confirm">
+            Confirm password
+          </label>
+          <input id="signup-confirm" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required>
+          <label class="inline-label" for="signup-type">
+            Joining as
+          </label>
+          <select id="signup-type" name="account_type" required>
+            <option value="">
+              Choose your account type
+            </option>
+            <option value="consumer">
+              Customer
+            </option>
+            <option value="producer">
+              Product host
+            </option>
+          </select>
+          <div data-business-field hidden>
+            <label class="inline-label" for="signup-business">
+              Shop or business name
+            </label>
+            <input id="signup-business" name="business_name" autocomplete="organization" maxlength="120">
+            <p class="form-help">
+              Once an admin approves your host account, you can submit products to Hamperia. Each listing is reviewed before publication.
+            </p>
+          </div>
+          <label class="inline-label" for="signup-phone">
+            Phone number (optional)
+          </label>
+          <input id="signup-phone" name="phone" type="tel" autocomplete="tel" maxlength="30">
+          <button class="button google-button" data-password-signup type="submit">
+            Create account
+          </button>
+        </form>
+        <p class="auth-status" data-auth-status role="status" aria-live="polite">
+        </p>
+        <p class="auth-switch-copy">
+          Already registered?
+          <a class="text-button" href="../">
+            Sign in
+          </a>
+        </p>
+      </section>
+    </main>
+    <footer class="footer"><div class="wrap"><div class="footer-top"><div><h2>Made to mean more.</h2><p>Personalised hampers, creative supplies and thoughtful corporate gifts.</p></div><div class="footer-contact"><a href="mailto:contact@hamperiasolutions.com">contact@hamperiasolutions.com</a><p><a href="../../bulk-orders/">Request a quotation</a> · <a href="../../blog/">Ideas & guides</a></p></div></div><div class="footer-bottom"><span>© 2026 Hamperia Solutions</span><span>Little moments. Big happiness.</span></div></div></footer>
+  </body>
+</html>

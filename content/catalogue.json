@@ -1,0 +1,634 @@
+{
+  "collections": {
+    "corporate-gifting": {
+      "slug": "corporate-gifting",
+      "title": "Corporate gifting",
+      "heading": "Thoughtful gifts. Meaningful connections.",
+      "intro": "Plan branded gifts for your team, clients and business milestones. Start with the people receiving them, then choose the contents, packaging and message.",
+      "advice": "Choose practical items people will use beyond the occasion. A consistent colour palette, a useful centrepiece and a personal note can make a modest gift feel considered.",
+      "planning": "Share your recipient count, budget per person, artwork and delivery date. We will confirm available contents, branding options and the final quotation before you place an order.",
+      "features": [
+        "Company branding",
+        "Employee and client options",
+        "Quantity-based quotations"
+      ],
+      "question": "Can I include my company logo?",
+      "answer": "Ask about a branded card, sleeve or packaging. The available method and minimum quantity depend on the chosen item."
+    },
+    "employee-gifts": {
+      "slug": "employee-gifts",
+      "title": "Employee gifts",
+      "heading": "For the people who make it happen.",
+      "intro": "Celebrate work anniversaries, achievements and everyday appreciation with employee gift hampers.",
+      "advice": "Choose a gift around the moment: desk essentials for a work milestone, a treat-filled box for a team celebration or a handwritten thank-you for individual recognition.",
+      "planning": "For a large team, check dietary needs and whether one consistent kit or a choice of options will suit recipients better. Share a delivery plan before confirming your order.",
+      "features": [
+        "Work milestones",
+        "Team celebrations",
+        "Personal thank-you notes"
+      ],
+      "question": "Can gifts include individual names?",
+      "answer": "Personalised name cards can be discussed in your quotation. Share the final names and spelling before artwork approval."
+    },
+    "client-gifts": {
+      "slug": "client-gifts",
+      "title": "Client gifts",
+      "heading": "A thank-you they will remember.",
+      "intro": "Explore gifting ideas for client appreciation, project handovers and business relationships.",
+      "advice": "A client gift should reflect the relationship. Consider understated branding, a concise personal message and contents suited to the recipient rather than filling a box with promotional items.",
+      "planning": "Check your recipient company’s gift policy and any food restrictions before choosing a hamper. Tell us whether gifts go to a single office or several addresses.",
+      "features": [
+        "Client appreciation",
+        "Project milestones",
+        "Personal messages"
+      ],
+      "question": "What should I share for a client-gift quotation?",
+      "answer": "Include the recipient count, occasion, per-gift budget, preferred contents and delivery locations."
+    },
+    "bulk-gifting": {
+      "slug": "bulk-gifting",
+      "title": "Bulk gifting",
+      "heading": "One occasion. Many thoughtful moments.",
+      "intro": "Plan coordinated hampers for events, teams and celebrations with a clear budget and quantity.",
+      "advice": "Start with the essential contents and packaging size. Larger quantities need time for sourcing, personalisation and packing; confirm the final design and sample arrangements before production.",
+      "planning": "Our bulk enquiry form starts at 25 units. Pricing depends on contents, materials, branding and delivery. We confirm these details in a written quotation.",
+      "features": [
+        "25+ unit enquiries",
+        "Coordinated packaging",
+        "Custom quotation"
+      ],
+      "question": "Is delivery included in the displayed price?",
+      "answer": "Delivery and customisation charges are confirmed separately in your quotation."
+    },
+    "corporate-merchandise": {
+      "slug": "corporate-merchandise",
+      "title": "Corporate merchandise",
+      "heading": "Useful objects. Your brand, thoughtfully placed.",
+      "intro": "Discuss branded stationery, drinkware and desk accessories as part of a corporate gift kit.",
+      "advice": "Build around daily use: a notebook for meetings, a pen for the desk or a bottle for the commute. Match the branding method to the material and available print area.",
+      "planning": "Share a clear logo file and preferred colours. Availability, branding technique, sample approval and minimum order quantity must be confirmed before production.",
+      "features": [
+        "Stationery ideas",
+        "Desk accessories",
+        "Branding consultation"
+      ],
+      "question": "Can you reproduce exact brand colours?",
+      "answer": "We will discuss the closest achievable finish for the chosen material. Approve artwork and any agreed sample before ordering."
+    },
+    "employee-welcome-kits": {
+      "slug": "employee-welcome-kits",
+      "title": "Employee welcome gifts",
+      "heading": "Welcome them to the team.",
+      "intro": "Choose from three illustrated Hamperia welcome-kit options for employee onboarding.",
+      "advice": "The Signature, Premium and Essential kits pair branded everyday items with a welcome message. Compare the listed kit images and prices, then share your quantity, artwork and preferred contents.",
+      "planning": "Branding, item sizes, final contents, availability and delivery must be confirmed in your quotation. For repeat hiring, ask about ordering the same kit in later batches.",
+      "features": [
+        "Three kit options",
+        "Everyday welcome items",
+        "Personalised message card"
+      ],
+      "question": "What is included in each welcome kit?",
+      "answer": "The supplied images show the proposed items. Check the full image and ask us to confirm your final contents, branding and delivery before ordering."
+    },
+    "onboarding-kits": {
+      "slug": "onboarding-kits",
+      "title": "Onboarding kits",
+      "heading": "Help them settle in.",
+      "intro": "Pair a welcome gift with practical materials for an employee’s first week.",
+      "advice": "Think beyond the first-day unboxing: a checklist, contact sheet, notebook and welcome message can help a colleague navigate their first week. Avoid printing information that changes frequently.",
+      "planning": "Use a QR code on your own welcome card for internal resources, and keep sensitive employee or company data out of printed gift packaging.",
+      "features": [
+        "First-week essentials",
+        "Welcome information",
+        "Practical packing"
+      ],
+      "question": "Can I provide my own onboarding inserts?",
+      "answer": "Yes, discuss insert size, quantity and packing requirements as part of the enquiry; inclusion is confirmed in the quotation."
+    },
+    "diwali-gifts": {
+      "slug": "diwali-gifts",
+      "title": "Diwali gifts",
+      "heading": "Little lights. Lasting memories.",
+      "intro": "Explore personalised Diwali hamper ideas for family, friends and festive gatherings.",
+      "advice": "Balance a festive centrepiece with contents the recipient enjoys. Consider dry fruits, chocolate or a diya, then bring everything together with a warm note and coordinated wrapping.",
+      "planning": "Before selecting food items, confirm allergies, ingredients and shelf life. Festive availability and delivery dates should be checked before ordering.",
+      "features": [
+        "Personal festive notes",
+        "Gift presentation",
+        "Contents to suit recipients"
+      ],
+      "question": "Can I personalise a Diwali hamper?",
+      "answer": "Share your preferred contents, message and colours. We will confirm which customisations are available."
+    },
+    "corporate-diwali-gifts": {
+      "slug": "corporate-diwali-gifts",
+      "title": "Corporate Diwali gifts",
+      "heading": "Celebrate together, beautifully.",
+      "intro": "Plan festive hampers for employees, clients and partners with consistent branding and presentation.",
+      "advice": "Corporate Diwali planning combines recipient lists, budget approval, artwork and delivery windows. Select a small number of hamper options so packing and distribution remain manageable.",
+      "planning": "Request a quotation with quantity bands and confirm any food restrictions. Approve the contents and message before the festive production schedule fills.",
+      "features": [
+        "Branded festive packaging",
+        "Employee and client options",
+        "Bulk planning"
+      ],
+      "question": "When should we start planning?",
+      "answer": "Start as early as practical and ask for the current production timeline. Your final deadline depends on quantity, customisation and destination."
+    },
+    "diwali-gifts-for-employees": {
+      "slug": "diwali-gifts-for-employees",
+      "title": "Diwali gifts for employees",
+      "heading": "A festive thank-you to your team.",
+      "intro": "Choose inclusive festive gifts that recognise the people behind your business.",
+      "advice": "For a varied team, consider shared dietary requirements and packaging that travels well. Offer clear choices only where the packing and fulfilment process can support them.",
+      "planning": "Confirm team counts and office distribution dates with HR. Use a consistent message while allowing individual name cards where available.",
+      "features": [
+        "Team appreciation",
+        "Dietary preferences",
+        "Office distribution"
+      ],
+      "question": "Can we use different gift options for teams?",
+      "answer": "Discuss the number of variants and quantity per variant before finalising the quotation."
+    },
+    "diwali-gifts-for-clients": {
+      "slug": "diwali-gifts-for-clients",
+      "title": "Diwali gifts for clients",
+      "heading": "Warm wishes, personally delivered.",
+      "intro": "Mark the festive season with considered hampers for clients and business partners.",
+      "advice": "Choose presentation that feels personal and professional. A short note from the account team is often more meaningful than prominent branding on every item.",
+      "planning": "Confirm recipient addresses and gift-policy restrictions. For food hampers, consider transit conditions and the time between packing and delivery.",
+      "features": [
+        "Client relationships",
+        "Understated branding",
+        "Recipient planning"
+      ],
+      "question": "Can the note be different for each client?",
+      "answer": "Ask about variable message cards and provide the final approved text in a consistent list."
+    },
+    "bulk-diwali-gifts": {
+      "slug": "bulk-diwali-gifts",
+      "title": "Bulk Diwali gifts",
+      "heading": "A festive plan for every recipient.",
+      "intro": "Coordinate larger Diwali gifting orders with a clear contents list, packing plan and deadline.",
+      "advice": "Start by choosing a per-unit budget and quantities. Separately account for personalisation, delivery and any taxes in the final quote so the overall cost is clear.",
+      "planning": "Freeze contents and artwork before production. Changes after approval may affect pricing or timelines and must be reconfirmed.",
+      "features": [
+        "Quantity planning",
+        "Artwork approval",
+        "Packing consistency"
+      ],
+      "question": "Can I get a quote before finalising contents?",
+      "answer": "Share an indicative budget and preferences. The initial proposal can guide selection, with a final quotation after details are agreed."
+    },
+    "gift-hampers": {
+      "slug": "gift-hampers",
+      "title": "Gift hampers",
+      "heading": "A collection of little joys.",
+      "intro": "Discover gift hampers for thoughtful thank-yous, personal celebrations and corporate occasions.",
+      "advice": "Choose a theme before selecting individual items. A small, well-matched collection can feel more personal than a larger assortment with no connection.",
+      "planning": "Review the contents, packaging and customisation options on each product. Images are presentation inspiration; final details are confirmed before ordering.",
+      "features": [
+        "Curated combinations",
+        "Personal messages",
+        "Occasion-led gifting"
+      ],
+      "question": "Can I swap a hamper item?",
+      "answer": "Request the change in your enquiry. Availability and any price difference will be confirmed before ordering."
+    },
+    "dry-fruit-hampers": {
+      "slug": "dry-fruit-hampers",
+      "title": "Dry fruit hampers",
+      "heading": "A classic, thoughtfully presented.",
+      "intro": "Explore dry-fruit hamper ideas for festive and corporate gifting.",
+      "advice": "Choose sealed portions and a presentation that protects the contents. Clear ingredient information, packing dates and storage instructions matter as much as the box design.",
+      "planning": "Tell us your preferred assortment and recipient restrictions. Nuts are common allergens; confirm the final ingredient list before sharing gifts.",
+      "features": [
+        "Sealed portions",
+        "Festive presentation",
+        "Ingredient checks"
+      ],
+      "question": "Can a dry-fruit hamper be nut-free?",
+      "answer": "A nut-free alternative needs a different contents selection. Discuss allergens and cross-contact information before ordering."
+    },
+    "chocolate-hampers": {
+      "slug": "chocolate-hampers",
+      "title": "Chocolate hampers",
+      "heading": "For the sweeter moments.",
+      "intro": "Create a chocolate-led gift hamper with a personal card and complementary small gifts.",
+      "advice": "Use a compact arrangement that protects wrappers and avoids crushing. Match the chocolate selection to recipient preferences and check ingredients where dietary restrictions apply.",
+      "planning": "Warm-weather transit can affect chocolate. Ask about delivery suitability for the destination and date before confirming the order.",
+      "features": [
+        "Sweet gift ideas",
+        "Personalised cards",
+        "Transit planning"
+      ],
+      "question": "Are chocolate hampers suitable for every destination?",
+      "answer": "Suitability depends on temperature and transit time. Confirm delivery arrangements before ordering."
+    },
+    "gourmet-hampers": {
+      "slug": "gourmet-hampers",
+      "title": "Gourmet hampers",
+      "heading": "Something delicious to discover.",
+      "intro": "Plan a food-focused gift around a shared tea break, coffee moment or favourite flavours.",
+      "advice": "A coherent assortment could pair a beverage with a snack and a small keepsake. Consider serving sizes and whether the gift will be shared by a family or office team.",
+      "planning": "Ask for the final food list, ingredient details and shelf life. Specific products are subject to sourcing and quotation.",
+      "features": [
+        "Tea and coffee themes",
+        "Snack pairings",
+        "Sharing occasions"
+      ],
+      "question": "Can I choose the food items?",
+      "answer": "Share preferences and exclusions. We will confirm the available assortment and price."
+    },
+    "healthy-hampers": {
+      "slug": "healthy-hampers",
+      "title": "Healthy hamper ideas",
+      "heading": "Thoughtful choices for everyday routines.",
+      "intro": "Explore lighter snack and practical gift ideas based on the recipient’s preferences.",
+      "advice": "“Healthy” means different things to different people. Compare actual ingredient and nutrition labels instead of relying on a category name, and ask about added sugar or relevant allergens.",
+      "planning": "These gifts are not dietary or medical advice. Confirm suitability with the recipient and choose products with clear labelling.",
+      "features": [
+        "Ingredient-led choices",
+        "Recipient preferences",
+        "Clear food labels"
+      ],
+      "question": "Can you guarantee a specific diet?",
+      "answer": "Do not assume a hamper meets a dietary requirement. Ask for product labels and confirm every item before ordering."
+    },
+    "wellness-hampers": {
+      "slug": "wellness-hampers",
+      "title": "Wellness hampers",
+      "heading": "A moment to slow down.",
+      "intro": "Build a relaxing gift around a quiet evening, a warm drink or a personal note.",
+      "advice": "Consider a candle, a journal or a beverage as a starting point. Keep fragrance preferences and sensitivities in mind and avoid combining overpowering scents.",
+      "planning": "Check care instructions and safe-use guidance for candles or fragrance products. Contents and availability are confirmed through your enquiry.",
+      "features": [
+        "Relaxation themes",
+        "Journaling ideas",
+        "Considered fragrances"
+      ],
+      "question": "Can I request fragrance-free contents?",
+      "answer": "Mention this in your enquiry so we can discuss suitable alternatives."
+    },
+    "gifts-under-500": {
+      "slug": "gifts-under-500",
+      "title": "Gifts under ₹500",
+      "heading": "Thoughtfulness within your budget.",
+      "intro": "Explore listed items below ₹500. Supplies are labelled separately from complete hampers.",
+      "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
+      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "features": [
+        "Transparent item prices",
+        "Supplies clearly labelled",
+        "Final quote before ordering"
+      ],
+      "question": "Does this budget include the complete hamper?",
+      "answer": "Only items labelled as hampers are complete combinations. Supplies are individual components; final contents, quantity and charges are confirmed in your quotation.",
+      "limit": 500
+    },
+    "gifts-under-1000": {
+      "slug": "gifts-under-1000",
+      "title": "Gifts under ₹1,000",
+      "heading": "Thoughtfulness within your budget.",
+      "intro": "Explore listed items below ₹1,000. Supplies are labelled separately from complete hampers.",
+      "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
+      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "features": [
+        "Transparent item prices",
+        "Supplies clearly labelled",
+        "Final quote before ordering"
+      ],
+      "question": "Does this budget include the complete hamper?",
+      "answer": "Only items labelled as hampers are complete combinations. Supplies are individual components; final contents, quantity and charges are confirmed in your quotation.",
+      "limit": 1000
+    },
+    "gifts-under-1500": {
+      "slug": "gifts-under-1500",
+      "title": "Gifts under ₹1,500",
+      "heading": "Thoughtfulness within your budget.",
+      "intro": "Explore listed items below ₹1,500. Supplies are labelled separately from complete hampers.",
+      "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
+      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "features": [
+        "Transparent item prices",
+        "Supplies clearly labelled",
+        "Final quote before ordering"
+      ],
+      "question": "Does this budget include the complete hamper?",
+      "answer": "Only items labelled as hampers are complete combinations. Supplies are individual components; final contents, quantity and charges are confirmed in your quotation.",
+      "limit": 1500
+    },
+    "gifts-under-2000": {
+      "slug": "gifts-under-2000",
+      "title": "Gifts under ₹2,000",
+      "heading": "Thoughtfulness within your budget.",
+      "intro": "Explore listed items below ₹2,000. Supplies are labelled separately from complete hampers.",
+      "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
+      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "features": [
+        "Transparent item prices",
+        "Supplies clearly labelled",
+        "Final quote before ordering"
+      ],
+      "question": "Does this budget include the complete hamper?",
+      "answer": "Only items labelled as hampers are complete combinations. Supplies are individual components; final contents, quantity and charges are confirmed in your quotation.",
+      "limit": 2000
+    },
+    "gifts-under-2500": {
+      "slug": "gifts-under-2500",
+      "title": "Gifts under ₹2,500",
+      "heading": "Thoughtfulness within your budget.",
+      "intro": "Explore listed items below ₹2,500. Supplies are labelled separately from complete hampers.",
+      "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
+      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "features": [
+        "Transparent item prices",
+        "Supplies clearly labelled",
+        "Final quote before ordering"
+      ],
+      "question": "Does this budget include the complete hamper?",
+      "answer": "Only items labelled as hampers are complete combinations. Supplies are individual components; final contents, quantity and charges are confirmed in your quotation.",
+      "limit": 2500
+    }
+  },
+  "products": [
+    {
+      "slug": "golden-luxury-celebration",
+      "name": "Golden Luxury Celebration",
+      "price": 2500,
+      "image": "hamper-golden.jpg",
+      "description": "A celebration assortment with chocolates, a scented candle and a custom card.",
+      "category": "hamper",
+      "tags": [
+        "gift-hampers",
+        "chocolate-hampers",
+        "client-gifts"
+      ]
+    },
+    {
+      "slug": "festive-wedding-delight",
+      "name": "Festive & Wedding Delight",
+      "price": 3200,
+      "image": "home_page.jpeg",
+      "description": "Dry-fruit jars, a brass diya and handcrafted chocolates, with presentation confirmed on enquiry.",
+      "category": "hamper",
+      "tags": [
+        "gift-hampers",
+        "dry-fruit-hampers"
+      ]
+    },
+    {
+      "slug": "executive-corporate-box",
+      "name": "Executive Corporate Box",
+      "price": 1800,
+      "image": "hamper-corporate.jpg",
+      "description": "A hardcover planner, metal pen, coaster and coffee for a thoughtful workday gift.",
+      "category": "hamper",
+      "tags": [
+        "gift-hampers",
+        "corporate-gifting",
+        "employee-gifts",
+        "client-gifts",
+        "corporate-merchandise",
+        "gourmet-hampers"
+      ]
+    },
+    {
+      "slug": "welcome-kit-signature-2999",
+      "name": "Signature Welcome Kit",
+      "price": 2999,
+      "image": "welcome-kit-2999.png",
+      "description": "A seven-piece premium branded welcome kit featuring an insulated bottle, notebook, pen, tumbler, T-shirt, keychain and personalised message card. Confirm final branding, sizes, contents and delivery in your quotation.",
+      "category": "kit",
+      "tags": [
+        "employee-welcome-kits",
+        "onboarding-kits",
+        "employee-gifts",
+        "corporate-gifting"
+      ]
+    },
+    {
+      "slug": "welcome-kit-premium-1899",
+      "name": "Premium Welcome Kit",
+      "price": 1899,
+      "image": "welcome-kit-1899.png",
+      "description": "A coordinated welcome set with bottle, notebook, pen and tumbler. Ask about the available custom branding, colours and final contents.",
+      "category": "kit",
+      "tags": [
+        "employee-welcome-kits",
+        "onboarding-kits",
+        "employee-gifts",
+        "corporate-gifting"
+      ]
+    },
+    {
+      "slug": "welcome-kit-essential-999",
+      "name": "Essential Welcome Kit",
+      "price": 999,
+      "image": "welcome-kit-999.png",
+      "description": "A simple new-team welcome set with bottle, notebook and pen. Contents and branding are confirmed before ordering.",
+      "category": "kit",
+      "tags": [
+        "employee-welcome-kits",
+        "onboarding-kits",
+        "employee-gifts",
+        "corporate-gifting"
+      ]
+    },
+    {
+      "slug": "diwali-premium-3499-green",
+      "name": "Diwali Premium Hamper — Green",
+      "price": 3499,
+      "image": "diwali-3499-green.png",
+      "description": "A festive gift box featuring dry fruits, a reed diffuser, candle, decorative idols and a greeting card. Confirm food labels, final contents and availability before ordering.",
+      "category": "hamper",
+      "tags": [
+        "diwali-gifts",
+        "corporate-diwali-gifts",
+        "bulk-diwali-gifts",
+        "diwali-gifts-for-employees",
+        "diwali-gifts-for-clients",
+        "gift-hampers",
+        "dry-fruit-hampers",
+        "wellness-hampers"
+      ]
+    },
+    {
+      "slug": "diwali-premium-3499-wine",
+      "name": "Diwali Premium Hamper — Wine",
+      "price": 3499,
+      "image": "diwali-3499-wine.png",
+      "description": "A burgundy festive presentation with assorted gifts, dry fruits, candle, diffuser and greeting card. Final contents are confirmed in your quotation.",
+      "category": "hamper",
+      "tags": [
+        "diwali-gifts",
+        "corporate-diwali-gifts",
+        "bulk-diwali-gifts",
+        "diwali-gifts-for-employees",
+        "diwali-gifts-for-clients",
+        "gift-hampers",
+        "dry-fruit-hampers"
+      ]
+    },
+    {
+      "slug": "diwali-celebration-2499",
+      "name": "Diwali Celebration Hamper",
+      "price": 2499,
+      "image": "diwali-2499.png",
+      "description": "A festive selection of dry fruits, chocolate, candle, reed diffuser, decorative idols and a message card. Check the final item list and dietary labels before purchase.",
+      "category": "hamper",
+      "tags": [
+        "diwali-gifts",
+        "corporate-diwali-gifts",
+        "bulk-diwali-gifts",
+        "diwali-gifts-for-employees",
+        "diwali-gifts-for-clients",
+        "gift-hampers",
+        "dry-fruit-hampers",
+        "chocolate-hampers",
+        "wellness-hampers"
+      ]
+    },
+    {
+      "slug": "diwali-thoughtful-1499",
+      "name": "Diwali Thoughtful Hamper",
+      "price": 1499,
+      "image": "diwali-1499-wine.png",
+      "description": "A smaller festive gift with roasted almonds and cashews, chocolate, candle and a personalised greeting card. Confirm product quantities and food labels before ordering.",
+      "category": "hamper",
+      "tags": [
+        "diwali-gifts",
+        "corporate-diwali-gifts",
+        "bulk-diwali-gifts",
+        "diwali-gifts-for-employees",
+        "diwali-gifts-for-clients",
+        "gift-hampers",
+        "dry-fruit-hampers",
+        "chocolate-hampers"
+      ]
+    },
+    {
+      "slug": "pinewood-crate",
+      "name": "Pinewood Crate",
+      "price": 350,
+      "image": "diy-tray.jpg",
+      "description": "A natural base for your own hamper. Confirm dimensions and available finishes before ordering.",
+      "category": "container",
+      "tags": []
+    },
+    {
+      "slug": "gold-tulle-wrap",
+      "name": "Gold Tulle Net Wrapping",
+      "price": 250,
+      "image": "diy-net.jpg",
+      "description": "A finishing layer for a handmade hamper. Confirm roll size and available colours in your enquiry.",
+      "category": "wrapping",
+      "tags": []
+    },
+    {
+      "slug": "paper-filler",
+      "name": "Shredded Paper Filler",
+      "price": 150,
+      "image": "diy-filler.jpg",
+      "description": "Arrange and support your gift contents. Pack size and colours are confirmed before ordering.",
+      "category": "filler",
+      "tags": []
+    },
+    {
+      "slug": "tags-and-ribbons",
+      "name": "Custom Tags & Satin Ribbons",
+      "price": 100,
+      "image": "diy-tags.jpg",
+      "description": "Add a name, message and finishing bow. Confirm quantity and personalisation in your enquiry.",
+      "category": "personalisation",
+      "tags": []
+    }
+  ],
+  "posts": [
+    {
+      "slug": "how-to-make-a-gift-hamper",
+      "title": "How to make a gift hamper at home",
+      "summary": "From the first basket to the final ribbon: a practical guide to making a personal gift.",
+      "image": "home_page.jpeg",
+      "sections": [
+        [
+          "Start with one person and one idea",
+          "Think about what your recipient enjoys. A tea break, a new job or a birthday can give your hamper a clear direction. Pick a few connected items instead of filling every gap with something unrelated."
+        ],
+        [
+          "Choose the container after the contents",
+          "Lay out your items and measure the arrangement before choosing a basket or box. Allow space for protective filler and wrapping. Keep heavier items near the base and avoid putting fragile pieces under pressure."
+        ],
+        [
+          "Arrange, protect and finish",
+          "Place taller items at the back and smaller items towards the front. Use filler to support the arrangement, not to hide loose or unstable items. Keep food sealed and separate it from scented products. Test that the contents stay in place before wrapping."
+        ],
+        [
+          "Make it personal",
+          "Add a short handwritten note, a name tag or a ribbon in their favourite colour. These details give the gift its meaning. If it will travel, add protective outer packaging and confirm the delivery arrangements."
+        ]
+      ],
+      "related": [
+        "hamperia",
+        "hampers"
+      ]
+    },
+    {
+      "slug": "hamper-budget-checklist",
+      "title": "How to plan a hamper budget",
+      "summary": "Count every component so a beautiful gift also stays within your budget.",
+      "image": "category-diy.jpg",
+      "sections": [
+        [
+          "Set a total before selecting items",
+          "Start with the total you want to spend on each finished gift. Reserve room for the container, filler, wrapping, a message card and delivery. The price of a basket alone is not the price of a hamper."
+        ],
+        [
+          "Choose one main gift",
+          "Make the most meaningful item your centrepiece. Add one or two small complementary items if the budget allows. A smaller box with well-chosen contents can be easier to present than a large basket with empty space."
+        ],
+        [
+          "Compare quantities carefully",
+          "Check whether a price refers to a single unit, pack or roll. For bulk orders, confirm minimum quantities and the cost of individual name cards or printed packaging. Ask whether delivery and applicable taxes are included in the quotation."
+        ],
+        [
+          "Keep a written contents list",
+          "Record the quantity and price of every component. Before confirming an order, check the final item list against the agreed quote. Keep an alternative in mind for anything dependent on seasonal availability."
+        ]
+      ],
+      "related": [
+        "shop-by-budget",
+        "bulk-gifting"
+      ]
+    },
+    {
+      "slug": "corporate-gifting-planning-checklist",
+      "title": "A practical corporate gifting checklist",
+      "summary": "A clear brief for employee, client and festive gifting enquiries.",
+      "image": "hamper-corporate.jpg",
+      "sections": [
+        [
+          "Define the occasion and recipients",
+          "Separate employee recognition, client appreciation and festive gifting needs. Check recipient policies and preferences before choosing contents. Agree how many variants you can realistically manage."
+        ],
+        [
+          "Prepare a useful enquiry",
+          "Share quantity, budget per unit, date, destination and branding requirements. Include any ingredient restrictions or packaging preferences. An exact brief makes it easier to compare proposals fairly."
+        ],
+        [
+          "Approve contents and artwork",
+          "Check names, spelling, logo placement and message text. Confirm what any sample represents and whether the final items can vary. Agree replacements in writing if a particular product becomes unavailable."
+        ],
+        [
+          "Plan distribution",
+          "Confirm who receives the shipment and how gifts will be handed out. For multiple addresses, agree a secure way to share delivery details. Allow time to check quantities and packaging before the event."
+        ]
+      ],
+      "related": [
+        "corporate-gifting",
+        "employee-welcome-kits",
+        "bulk-gifting"
+      ]
+    }
+  ]
+}

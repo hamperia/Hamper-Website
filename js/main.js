@@ -1,3 +1,7 @@
+// Keep bookmarked index.html links working while showing the clean directory URL.
+if (window.location.pathname.endsWith('/index.html')) {
+ window.history.replaceState(null, '', window.location.pathname.slice(0, -10) + window.location.search + window.location.hash);
+}
 const menu = document.querySelector('.menu');
 const nav = document.querySelector('.nav-links');
 menu?.addEventListener('click', () => { const open = menu.getAttribute('aria-expanded') !== 'true'; menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('open', open); menu.textContent = open ? 'Close ✕' : 'Menu ☰'; });
