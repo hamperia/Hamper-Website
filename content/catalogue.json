@@ -45,32 +45,17 @@
       "question": "What should I share for a client-gift quotation?",
       "answer": "Include the recipient count, occasion, per-gift budget, preferred contents and delivery locations."
     },
-    "bulk-gifting": {
-      "slug": "bulk-gifting",
-      "title": "Bulk gifting",
-      "heading": "One occasion. Many thoughtful moments.",
-      "intro": "Plan coordinated hampers for events, teams and celebrations with a clear budget and quantity.",
-      "advice": "Start with the essential contents and packaging size. Larger quantities need time for sourcing, personalisation and packing; confirm the final design and sample arrangements before production.",
-      "planning": "Our bulk enquiry form starts at 25 units. Pricing depends on contents, materials, branding and delivery. We confirm these details in a written quotation.",
-      "features": [
-        "25+ unit enquiries",
-        "Coordinated packaging",
-        "Custom quotation"
-      ],
-      "question": "Is delivery included in the displayed price?",
-      "answer": "Delivery and customisation charges are confirmed separately in your quotation."
-    },
     "corporate-merchandise": {
       "slug": "corporate-merchandise",
       "title": "Corporate merchandise",
       "heading": "Useful objects. Your brand, thoughtfully placed.",
-      "intro": "Discuss branded stationery, drinkware and desk accessories as part of a corporate gift kit.",
-      "advice": "Build around daily use: a notebook for meetings, a pen for the desk or a bottle for the commute. Match the branding method to the material and available print area.",
-      "planning": "Share a clear logo file and preferred colours. Availability, branding technique, sample approval and minimum order quantity must be confirmed before production.",
+      "intro": "Explore logo-ready bottles, tumblers, mugs, keychains, T-shirts and hoodies for teams and events.",
+      "advice": "Choose useful items your recipients will enjoy: drinkware for desks and commutes, clothing for teams, and small keepsakes for events. Match logo placement and branding method to each material.",
+      "planning": "Share a clear logo file, garment sizes and preferred colours. Availability, branding technique, sample approval and minimum order quantity must be confirmed before production.",
       "features": [
-        "Stationery ideas",
-        "Desk accessories",
-        "Branding consultation"
+        "Branded drinkware",
+        "Logo-ready clothing",
+        "Keychains and keepsakes"
       ],
       "question": "Can you reproduce exact brand colours?",
       "answer": "We will discuss the closest achievable finish for the chosen material. Approve artwork and any agreed sample before ordering."
@@ -164,21 +149,6 @@
       ],
       "question": "Can the note be different for each client?",
       "answer": "Ask about variable message cards and provide the final approved text in a consistent list."
-    },
-    "bulk-diwali-gifts": {
-      "slug": "bulk-diwali-gifts",
-      "title": "Bulk Diwali gifts",
-      "heading": "A festive plan for every recipient.",
-      "intro": "Coordinate larger Diwali gifting orders with a clear contents list, packing plan and deadline.",
-      "advice": "Start by choosing a per-unit budget and quantities. Separately account for personalisation, delivery and any taxes in the final quote so the overall cost is clear.",
-      "planning": "Freeze contents and artwork before production. Changes after approval may affect pricing or timelines and must be reconfirmed.",
-      "features": [
-        "Quantity planning",
-        "Artwork approval",
-        "Packing consistency"
-      ],
-      "question": "Can I get a quote before finalising contents?",
-      "answer": "Share an indicative budget and preferences. The initial proposal can guide selection, with a final quotation after details are agreed."
     },
     "gift-hampers": {
       "slug": "gift-hampers",
@@ -276,7 +246,7 @@
       "heading": "Thoughtfulness within your budget.",
       "intro": "Explore listed items below ₹500. Supplies are labelled separately from complete hampers.",
       "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
-      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "planning": "Listed item prices are final. Flat ₹99 shipping is added at checkout; customisation requires a separate quote.",
       "features": [
         "Transparent item prices",
         "Supplies clearly labelled",
@@ -292,7 +262,7 @@
       "heading": "Thoughtfulness within your budget.",
       "intro": "Explore listed items below ₹1,000. Supplies are labelled separately from complete hampers.",
       "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
-      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "planning": "Listed item prices are final. Flat ₹99 shipping is added at checkout; customisation requires a separate quote.",
       "features": [
         "Transparent item prices",
         "Supplies clearly labelled",
@@ -308,7 +278,7 @@
       "heading": "Thoughtfulness within your budget.",
       "intro": "Explore listed items below ₹1,500. Supplies are labelled separately from complete hampers.",
       "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
-      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "planning": "Listed item prices are final. Flat ₹99 shipping is added at checkout; customisation requires a separate quote.",
       "features": [
         "Transparent item prices",
         "Supplies clearly labelled",
@@ -324,7 +294,7 @@
       "heading": "Thoughtfulness within your budget.",
       "intro": "Explore listed items below ₹2,000. Supplies are labelled separately from complete hampers.",
       "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
-      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "planning": "Listed item prices are final. Flat ₹99 shipping is added at checkout; customisation requires a separate quote.",
       "features": [
         "Transparent item prices",
         "Supplies clearly labelled",
@@ -340,7 +310,7 @@
       "heading": "Thoughtfulness within your budget.",
       "intro": "Explore listed items below ₹2,500. Supplies are labelled separately from complete hampers.",
       "advice": "A per-item price is not the total cost of a finished hamper. Add the container, contents and wrapping before deciding whether the combination fits your overall budget.",
-      "planning": "Prices shown are indicative. Delivery and personalisation may be additional; confirm the final total before ordering.",
+      "planning": "Listed item prices are final. Flat ₹99 shipping is added at checkout; customisation requires a separate quote.",
       "features": [
         "Transparent item prices",
         "Supplies clearly labelled",
@@ -389,7 +359,6 @@
         "corporate-gifting",
         "employee-gifts",
         "client-gifts",
-        "corporate-merchandise",
         "gourmet-hampers"
       ]
     },
@@ -445,7 +414,6 @@
       "tags": [
         "diwali-gifts",
         "corporate-diwali-gifts",
-        "bulk-diwali-gifts",
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
@@ -463,7 +431,6 @@
       "tags": [
         "diwali-gifts",
         "corporate-diwali-gifts",
-        "bulk-diwali-gifts",
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
@@ -480,7 +447,6 @@
       "tags": [
         "diwali-gifts",
         "corporate-diwali-gifts",
-        "bulk-diwali-gifts",
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
@@ -499,12 +465,56 @@
       "tags": [
         "diwali-gifts",
         "corporate-diwali-gifts",
-        "bulk-diwali-gifts",
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
         "dry-fruit-hampers",
         "chocolate-hampers"
+      ]
+    },
+    {
+      "slug": "dry-fruit-two-jar-box",
+      "name": "Two-Jar Dry Fruit Box",
+      "price": 699,
+      "image": "dry-fruit-two-jar.png",
+      "description": "A gift box with two glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
+      "category": "hamper",
+      "tags": [
+        "dry-fruit-hampers",
+        "gift-hampers",
+        "employee-gifts",
+        "client-gifts",
+        "corporate-gifting"
+      ]
+    },
+    {
+      "slug": "dry-fruit-three-jar-box",
+      "name": "Three-Jar Dry Fruit Box",
+      "price": 1099,
+      "image": "dry-fruit-three-jar.png",
+      "description": "A gift box with three glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
+      "category": "hamper",
+      "tags": [
+        "dry-fruit-hampers",
+        "gift-hampers",
+        "employee-gifts",
+        "client-gifts",
+        "corporate-gifting"
+      ]
+    },
+    {
+      "slug": "dry-fruit-four-jar-box",
+      "name": "Four-Jar Dry Fruit Box",
+      "price": 1499,
+      "image": "dry-fruit-four-jar.png",
+      "description": "A gift box with four glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
+      "category": "hamper",
+      "tags": [
+        "dry-fruit-hampers",
+        "gift-hampers",
+        "employee-gifts",
+        "client-gifts",
+        "corporate-gifting"
       ]
     },
     {
@@ -598,7 +608,7 @@
       ],
       "related": [
         "shop-by-budget",
-        "bulk-gifting"
+        "corporate-gifting"
       ]
     },
     {
@@ -627,7 +637,7 @@
       "related": [
         "corporate-gifting",
         "employee-welcome-kits",
-        "bulk-gifting"
+        "corporate-merchandise"
       ]
     }
   ]

@@ -1,0 +1,52 @@
+import { admin, cors, identity, json, razorpay, secret } from '../_shared/commerce.ts';
+
+type CartItem = { key: string; quantity: number };
+const shippingPaise = 9900;
+
+Deno.serve(async req => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+  if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+  try {
+    // The browser sends identifiers only. Prices always come from database records.
+    const { db, user } = await identity(req);
+    const input = await req.json();
+    const items: CartItem[] = input.items;
+    const address = input.address;
+    if (!Array.isArray(items) || !items.length || items.length > 30) return json({ error: 'Invalid basket' }, 400);
+    if (!address || typeof address !== 'object') return json({ error: 'Delivery address is required' }, 400);
+    for (const field of ['full_name', 'phone', 'line1', 'city', 'state', 'pincode']) {
+      if (typeof address[field] !== 'string' || !address[field].trim() || address[field].length > 160) return json({ error: 'Complete the delivery address' }, 400);
+    }
+    if (!/^\d{10}$/.test(address.phone) || !/^\d{6}$/.test(address.pincode)) return json({ error: 'Enter a valid phone number and PIN code' }, 400);
+    const giftNote = typeof address.gift_note === 'string' ? address.gift_note.slice(0, 250) : '';
+    const cleanedAddress = Object.fromEntries(['full_name', 'phone', 'line1', 'line2', 'city', 'state', 'pincode'].map(key => [key, String(address[key] || '').trim()]));
+    const unique = new Set<string>();
+    const lines: { product_key: string; name: string; quantity: number; unit_price_paise: number }[] = [];
+    for (const item of items) {
+      if (!item || typeof item.key !== 'string' || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 10 || unique.has(item.key)) return json({ error: 'Invalid basket' }, 400);
+      unique.add(item.key);
+      if (item.key.startsWith('catalog:')) {
+        const slug = item.key.slice(8);
+        const { data, error } = await db.from('catalog_products').select('name,price_paise').eq('slug', slug).eq('active', true).maybeSingle();
+        if (error || !data) return json({ error: 'A product in your basket is unavailable' }, 409);
+        lines.push({ product_key: item.key, name: data.name, quantity: item.quantity, unit_price_paise: data.price_paise });
+      } else if (item.key.startsWith('maker:')) {
+        const id = item.key.slice(6);
+        if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: 'Invalid product' }, 400);
+        const { data, error } = await db.from('products').select('name,price').eq('id', id).eq('status', 'approved').maybeSingle();
+        if (error || !data) return json({ error: 'A product in your basket is unavailable' }, 409);
+        lines.push({ product_key: item.key, name: data.name, quantity: item.quantity, unit_price_paise: Math.round(Number(data.price) * 100) });
+      } else return json({ error: 'Invalid product' }, 400);
+    }
+    const subtotal = lines.reduce((total, line) => total + line.unit_price_paise * line.quantity, 0);
+    const total = subtotal + shippingPaise;
+    if (!Number.isSafeInteger(total) || total < shippingPaise + 100 || total > 1000000000) return json({ error: 'Invalid order total' }, 400);
+    const orderId = crypto.randomUUID();
+    const gatewayOrder = await razorpay('orders', 'POST', { amount: total, currency: 'INR', receipt: orderId, notes: { shop_order_id: orderId } });
+    const { error: orderError } = await db.from('shop_orders').insert({ id: orderId, user_id: user.id, subtotal_paise: subtotal, shipping_paise: shippingPaise, total_paise: total, delivery_address: cleanedAddress, gift_note: giftNote, razorpay_order_id: gatewayOrder.id });
+    if (orderError) throw new Error('Unable to save the order');
+    const { error: lineError } = await db.from('shop_order_items').insert(lines.map(line => ({ order_id: orderId, ...line })));
+    if (lineError) { await db.from('shop_orders').delete().eq('id', orderId); throw new Error('Unable to save the order items'); }
+    return json({ order_id: orderId, razorpay_order_id: gatewayOrder.id, amount_paise: total, key_id: secret('RAZORPAY_KEY_ID') });
+  } catch (error) { return json({ error: error instanceof Error ? error.message : 'Checkout failed' }, 400); }
+});

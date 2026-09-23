@@ -36,4 +36,20 @@
   const collection = new URLSearchParams(location.search).get('collection');
   const notes = document.querySelector('#bulk-form textarea');
   if (collection && notes && !notes.value) notes.value = `Interested in: ${collection.slice(0, 200)}\n`;
+  document.querySelectorAll('[data-product-rail]').forEach(rail => {
+    const track = rail.querySelector('.product-rail-track');
+    rail.querySelector('[data-rail-prev]')?.addEventListener('click', () => track.scrollBy({ left: -track.clientWidth * .8, behavior: 'smooth' }));
+    rail.querySelector('[data-rail-next]')?.addEventListener('click', () => track.scrollBy({ left: track.clientWidth * .8, behavior: 'smooth' }));
+  });
+  const commerce = document.createElement('script');
+  commerce.src = new URL('./commerce.js', document.currentScript.src).href;
+  const commerceStyles = document.createElement('link');
+  commerceStyles.rel = 'stylesheet';
+  commerceStyles.href = new URL('../css/commerce.css', document.currentScript.src).href;
+  document.head.append(commerceStyles);
+  const builderStyles = document.createElement('link');
+  builderStyles.rel = 'stylesheet';
+  builderStyles.href = new URL('../css/hamper-builder.css', document.currentScript.src).href;
+  document.head.append(builderStyles);
+  document.head.append(commerce);
 })();

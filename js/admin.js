@@ -5,6 +5,35 @@
   if (!list || !window.hamperia) return;
   const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
   const message = (text, type) => { list.innerHTML = `<p class="form-status ${type || ''}">${escapeHtml(text)}</p>`; };
+  const ordersSection = document.querySelector('[data-admin-orders]');
+  const ordersList = document.querySelector('[data-admin-orders-list]');
+
+  async function loadOrders() {
+    if (!ordersSection || !ordersList) return;
+    if (window.hamperia.state.role !== 'admin') { ordersSection.hidden = true; ordersList.textContent = ''; return; }
+    ordersSection.hidden = false;
+    const { data, error } = await window.hamperia.client.from('shop_orders')
+      .select('id,status,total_paise,delivery_address,created_at,shop_order_items(name,quantity)')
+      .in('status', ['paid', 'fulfilled']).order('created_at', { ascending: false }).limit(50);
+    if (error) { ordersList.textContent = 'Order history will appear after checkout setup is complete.'; return; }
+    if (!data?.length) { ordersList.textContent = 'No paid orders yet.'; return; }
+    ordersList.innerHTML = data.map(order => {
+      const a = order.delivery_address || {};
+      const address = [a.full_name, a.phone, a.line1, a.line2, a.city, a.state, a.pincode].filter(Boolean).map(escapeHtml).join(', ');
+      const products = (order.shop_order_items || []).map(item => `${escapeHtml(item.name)} × ${Number(item.quantity)}`).join(' · ');
+      return `<article class="review-card" data-shop-order="${escapeHtml(order.id)}"><div><p class="eyebrow">${escapeHtml(order.status)} · ${escapeHtml(new Date(order.created_at).toLocaleDateString('en-IN'))}</p><h3>Order ${escapeHtml(order.id.slice(0, 8).toUpperCase())}</h3><p>${products}</p><p>${address}</p><strong>₹${(order.total_paise / 100).toLocaleString('en-IN')}</strong></div>${order.status === 'paid' ? '<button class="button" type="button" data-fulfil-order>Mark fulfilled</button>' : ''}</article>`;
+    }).join('');
+  }
+
+  ordersList?.addEventListener('click', async event => {
+    const button = event.target.closest('[data-fulfil-order]');
+    const card = event.target.closest('[data-shop-order]');
+    if (!button || !card) return;
+    button.disabled = true;
+    const { data, error } = await window.hamperia.client.rpc('mark_order_fulfilled', { p_order_id: card.dataset.shopOrder });
+    if (error || !data) { button.disabled = false; button.textContent = 'Could not update. Retry'; return; }
+    await loadOrders();
+  });
 
   async function loadProducts() {
     const state = window.hamperia.state;
@@ -50,6 +79,7 @@
 
   window.hamperia.onSession = async (state) => {
     await loadProducts(state);
+    await loadOrders();
     const tools = document.querySelector('[data-admin-tools]');
     if (tools) tools.hidden = !state.user || state.role !== 'admin';
   };

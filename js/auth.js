@@ -3,6 +3,11 @@
   'use strict';
   const base = new URL('../', document.currentScript.src);
   const url = (path = '') => new URL(path, base).href;
+  function afterLoginUrl() {
+    const path = sessionStorage.getItem('hamperia_after_login');
+    sessionStorage.removeItem('hamperia_after_login');
+    return url(path === 'checkout/' ? path : '');
+  }
   const client = window.supabase?.createClient(
     'https://gphkitnnjdqbxgwqtjpl.supabase.co',
     'sb_publishable_Wd8x5Y3IFums5TepzzwdSA_kpVcakXO',
@@ -115,7 +120,7 @@
     if (session?.user && !profile?.registration_completed && processReturn && (intent === 'signup' || isCallback) && !isSignup) {
       window.location.replace(url('auth/signup/'));
     } else if (profile?.registration_completed && processReturn && (isCallback || intent || isSignup)) {
-      window.location.replace(url());
+      window.location.replace(afterLoginUrl());
     }
   }
   async function run(action, form) {
@@ -159,7 +164,7 @@
       throw new Error('Signup has not been completed. Choose Create an account below to finish registering.');
     }
     await render(data.session, profile);
-    window.location.assign(url());
+    window.location.assign(afterLoginUrl());
   }
   async function signUp(form) {
     const values = Object.fromEntries(new FormData(form));
@@ -182,7 +187,7 @@
       if (error) throw new Error('Your password was saved, but profile setup failed. Please retry completing signup.');
       form.elements.password.value = '';
       form.elements.confirm_password.value = '';
-      window.location.assign(url());
+      window.location.assign(afterLoginUrl());
       return;
     }
     const { data, error } = await client.auth.signUp({
@@ -197,7 +202,7 @@
     } else if (data.session) {
       await sync(data.session);
       if (!state.user) throw new Error('Your profile is not ready yet. Please retry completing signup.');
-      window.location.assign(url());
+      window.location.assign(afterLoginUrl());
     } else {
       status('Check your email to confirm your account, then sign in. If you already registered, use the Sign in link below.', 'success');
     }
