@@ -23,11 +23,28 @@ create table if not exists public.shop_orders (
   total_paise integer not null check (total_paise = subtotal_paise + shipping_paise),
   delivery_address jsonb not null,
   gift_note text,
-  razorpay_order_id text unique not null,
+  payment_provider text not null default 'razorpay' check (payment_provider in ('razorpay','payu')),
+  razorpay_order_id text unique,
   razorpay_payment_id text unique,
+  payu_txn_id text unique,
+  payu_payment_id text unique,
   paid_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+-- Safe to run when the earlier Razorpay-only commerce table already exists.
+alter table public.shop_orders add column if not exists payment_provider text not null default 'razorpay';
+alter table public.shop_orders add column if not exists payu_txn_id text unique;
+alter table public.shop_orders add column if not exists payu_payment_id text unique;
+alter table public.shop_orders alter column razorpay_order_id drop not null;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'shop_orders_provider_reference_check') then
+    alter table public.shop_orders add constraint shop_orders_provider_reference_check check (
+      (payment_provider = 'razorpay' and razorpay_order_id is not null and payu_txn_id is null) or
+      (payment_provider = 'payu' and payu_txn_id is not null and razorpay_order_id is null)
+    );
+  end if;
+end $$;
 
 create table if not exists public.shop_order_items (
   id bigint generated always as identity primary key,

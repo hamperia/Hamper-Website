@@ -3,17 +3,10 @@
 
   const root = new URL('../', document.currentScript.src);
   const link = path => new URL(path, root).href;
-  const cartKey = 'hamperia_cart_v1';
-  const wishKey = 'hamperia_wishlist_v1';
+  const shopping = window.hamperiaShoppingState.createShoppingState(localStorage);
+  const { cart, wishlist } = shopping;
   const money = paise => `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const read = key => {
-    try { const value = JSON.parse(localStorage.getItem(key)); return Array.isArray(value) ? value : []; }
-    catch { return []; }
-  };
-  const cart = new Map(read(cartKey).filter(x => typeof x.key === 'string' && Number.isInteger(x.quantity) && x.quantity > 0).map(x => [x.key, Math.min(10, x.quantity)]));
-  const wishlist = new Set(read(wishKey).filter(x => typeof x === 'string'));
-  let wishStorageKey = wishKey;
   const products = new Map();
   let config = { paymentsEnabled: false, shippingPaise: 9900, currency: 'INR' };
   let client = null;
@@ -21,8 +14,7 @@
   let busy = false;
 
   function persist() {
-    localStorage.setItem(cartKey, JSON.stringify([...cart].map(([key, quantity]) => ({ key, quantity }))));
-    localStorage.setItem(wishStorageKey, JSON.stringify([...wishlist]));
+    shopping.save();
     document.querySelectorAll('[data-cart-count]').forEach(node => { node.textContent = [...cart.values()].reduce((a, b) => a + b, 0); });
     document.querySelectorAll('[data-wish-count]').forEach(node => { node.textContent = wishlist.size; });
     document.querySelectorAll('[data-wish-key]').forEach(node => {
@@ -79,12 +71,17 @@
 
   async function syncWishlist() {
     if (!client || !user) return;
-    const { data, error } = await client.from('wishlist_items').select('product_key').eq('user_id', user.id);
-    if (error) return;
+    const accountId = user.id;
+    const localWins = shopping.hadSavedWishlist || wishlist.size > 0;
+    const { data, error } = await client.from('wishlist_items').select('product_key').eq('user_id', accountId);
+    if (error || user?.id !== accountId) return;
     const remote = new Set((data || []).map(item => item.product_key));
     const missing = [...wishlist].filter(key => !remote.has(key));
-    if (missing.length) await client.from('wishlist_items').upsert(missing.map(product_key => ({ user_id: user.id, product_key })), { onConflict: 'user_id,product_key' });
-    remote.forEach(key => wishlist.add(key));
+    if (localWins) {
+      if (missing.length) await client.from('wishlist_items').upsert(missing.map(product_key => ({ user_id: accountId, product_key })), { onConflict: 'user_id,product_key' });
+      for (const key of remote) if (!wishlist.has(key)) await client.from('wishlist_items').delete().eq('user_id', accountId).eq('product_key', key);
+    } else remote.forEach(key => wishlist.add(key));
+    if (user?.id !== accountId) return;
     persist();
   }
 
@@ -102,11 +99,16 @@
       await window.hamperia.ready;
       client = window.hamperia.client;
       user = window.hamperia.state.user;
-      if (user) {
-        wishStorageKey = `${wishKey}:${user.id}`;
-        read(wishStorageKey).filter(x => typeof x === 'string').forEach(key => wishlist.add(key));
-        localStorage.removeItem(wishKey);
-      }
+      shopping.activate(user?.id);
+      window.hamperia.beforeSignOutListeners.push(() => { shopping.signOut(); user = null; persist(); renderView(); });
+      window.hamperia.sessionListeners ||= [];
+      window.hamperia.sessionListeners.push(async state => {
+        if (shopping.userId === (state.user?.id || null)) return;
+        user = state.user;
+        shopping.activate(user?.id);
+        if (user) await syncWishlist();
+        persist(); renderView();
+      });
       if (client) {
         const { data } = await client.from('products').select('id,name,price,image_url,category').eq('status', 'approved');
         for (const item of data || []) products.set(`maker:${item.id}`, {
@@ -116,6 +118,8 @@
         });
         await syncWishlist();
       }
+    } else {
+      shopping.activate(null);
     }
     addShoppingControls();
     renderView();
@@ -151,15 +155,24 @@
     const { entries, subtotal } = totals();
     if (!entries.length) { view.innerHTML = `<div class="commerce-empty"><h2>Your basket is empty.</h2><a class="button" href="${link('hamperia/')}">Browse products</a></div>`; return; }
     if (entries.some(x => !x.product)) { view.innerHTML = `<div class="commerce-empty"><h2>Review your basket first.</h2><p>One or more products are unavailable.</p><a class="button" href="${link('cart/')}">Review basket</a></div>`; return; }
-    if (!user) { view.innerHTML = config.paymentsEnabled ? `<div class="commerce-empty"><h2>Sign in to place an order.</h2><p>Your basket will stay here while you sign in.</p><a class="button" href="${link('auth/')}" data-checkout-signin>Sign in or create an account</a></div>` : `<div class="commerce-empty"><h2>Online checkout is being set up.</h2><p>Orders cannot be placed yet. Your basket is saved on this device.</p><a class="button secondary" href="${link('cart/')}">Review basket</a></div>`; return; }
-    view.innerHTML = `<div class="commerce-layout"><form class="checkout-form" data-checkout-form><h2>Delivery address</h2><div class="checkout-fields"><label>Full name<input name="full_name" autocomplete="name" required maxlength="100" value="${escape(window.hamperia?.state.profile?.display_name || '')}"></label><label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></label><label>Address line 1<input name="line1" autocomplete="address-line1" required maxlength="160"></label><label>Address line 2 (optional)<input name="line2" autocomplete="address-line2" maxlength="160"></label><label>City<input name="city" autocomplete="address-level2" required maxlength="80"></label><label>State<input name="state" autocomplete="address-level1" required maxlength="80"></label><label>PIN code<input name="pincode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{6}" required></label><label>Gift note (optional)<textarea name="gift_note" maxlength="250" rows="3"></textarea></label></div><p class="checkout-notice" role="status" data-checkout-status>${config.paymentsEnabled ? 'Payment opens securely on this page through Razorpay.' : 'Online payment is being set up. Orders cannot be placed yet.'}</p><button class="button" type="submit" ${config.paymentsEnabled ? '' : 'disabled'}>${config.paymentsEnabled ? `Pay ${money(subtotal + config.shippingPaise)} with Razorpay` : 'Checkout coming soon'}</button></form><aside class="commerce-summary"><h2>Your order</h2>${entries.map(x => `<p><span>${escape(x.product.name)} × ${x.quantity}</span><strong>${money(x.product.pricePaise * x.quantity)}</strong></p>`).join('')}<p><span>Flat shipping</span><strong>${money(config.shippingPaise)}</strong></p><p class="commerce-total"><span>Total</span><strong>${money(subtotal + config.shippingPaise)}</strong></p><a href="${link('cart/')}">Edit basket</a></aside></div>`;
+    if (!user) { view.innerHTML = `<div class="commerce-empty"><h2>Sign in to place an order.</h2><a class="button" href="${link('auth/')}" data-checkout-signin>Sign in or create an account</a></div>`; return; }
+    const providers = config.providers || {};
+    const razorpayReady = Boolean(config.paymentsEnabled && providers.razorpay);
+    const payuReady = Boolean(config.paymentsEnabled && providers.payu);
+    const anyReady = razorpayReady || payuReady;
+    const methods = `<fieldset class="payment-methods"><legend>Choose how to pay</legend><label><input type="radio" name="provider" value="razorpay" ${razorpayReady ? 'checked' : 'disabled'}> Razorpay ${razorpayReady ? '' : '· Coming soon'}</label><label><input type="radio" name="provider" value="payu" ${payuReady && !razorpayReady ? 'checked' : ''} ${payuReady ? '' : 'disabled'}> PayU India ${payuReady ? '' : '· Coming soon'}</label></fieldset>`;
+    view.innerHTML = `<div class="commerce-layout"><form class="checkout-form" data-checkout-form><h2>Delivery address</h2><div class="checkout-fields"><label>Full name<input name="full_name" autocomplete="name" required maxlength="100" value="${escape(window.hamperia?.state.profile?.display_name || '')}"></label><label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></label><label>Address line 1<input name="line1" autocomplete="address-line1" required maxlength="160"></label><label>Address line 2 (optional)<input name="line2" autocomplete="address-line2" maxlength="160"></label><label>City<input name="city" autocomplete="address-level2" required maxlength="80"></label><label>State<input name="state" autocomplete="address-level1" required maxlength="80"></label><label>PIN code<input name="pincode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{6}" required></label><label>Gift note (optional)<textarea name="gift_note" maxlength="250" rows="3"></textarea></label></div>${methods}<p class="checkout-notice" role="status" data-checkout-status>${anyReady ? 'Your payment will be processed by the provider you choose.' : 'Online payment is being set up. Orders cannot be placed yet.'}</p><button class="button" type="submit" ${anyReady ? '' : 'disabled'}>${anyReady ? `Pay ${money(subtotal + config.shippingPaise)}` : 'Checkout coming soon'}</button></form><aside class="commerce-summary"><h2>Your order</h2>${entries.map(x => `<p><span>${escape(x.product.name)} × ${x.quantity}</span><strong>${money(x.product.pricePaise * x.quantity)}</strong></p>`).join('')}<p><span>Flat shipping</span><strong>${money(config.shippingPaise)}</strong></p><p class="commerce-total"><span>Total</span><strong>${money(subtotal + config.shippingPaise)}</strong></p><a href="${link('cart/')}">Edit basket</a></aside></div>`;
   }
 
   async function renderOrders(view) {
     if (!user) { view.innerHTML = `<div class="commerce-empty"><h2>Sign in to view your orders.</h2><a class="button" href="${link('auth/')}">Sign in</a></div>`; return; }
     const { data, error } = await client.from('shop_orders').select('id,status,total_paise,created_at').eq('user_id', user.id).order('created_at', { ascending: false });
     if (error) { view.innerHTML = '<div class="commerce-empty"><h2>Order history is being set up.</h2><p>Please check again once online checkout is available.</p></div>'; return; }
-    view.innerHTML = data?.length ? `<div class="commerce-list">${data.map(order => `<article class="order-row"><div><h2>Order ${escape(order.id.slice(0, 8).toUpperCase())}</h2><p>${escape(new Date(order.created_at).toLocaleDateString('en-IN'))}</p></div><strong>${escape(order.status.replaceAll('_', ' '))}</strong><span>${money(order.total_paise)}</span></article>`).join('')}</div>` : `<div class="commerce-empty"><h2>No orders yet.</h2><p>Your purchases will appear here after checkout.</p><a class="button" href="${link('hampers/')}">Explore hampers</a></div>`;
+    const query = new URLSearchParams(location.search);
+    const returnedOrder = (data || []).find(order => order.id === query.get('order'));
+    if (returnedOrder && ['paid', 'fulfilled'].includes(returnedOrder.status)) { cart.clear(); persist(); }
+    const message = query.has('payment') ? `<p role="status" class="checkout-notice">${returnedOrder && ['paid', 'fulfilled'].includes(returnedOrder.status) ? 'Payment confirmed. Thank you for your order.' : 'We are checking the payment. Please review your order status before attempting another payment.'}</p>` : '';
+    view.innerHTML = message + (data?.length ? `<div class="commerce-list">${data.map(order => `<article class="order-row"><div><h2>Order ${escape(order.id.slice(0, 8).toUpperCase())}</h2><p>${escape(new Date(order.created_at).toLocaleDateString('en-IN'))}</p></div><strong>${escape(order.status.replaceAll('_', ' '))}</strong><span>${money(order.total_paise)}</span></article>`).join('')}</div>` : `<div class="commerce-empty"><h2>No orders yet.</h2><p>Your purchases will appear here after checkout.</p><a class="button" href="${link('hampers/')}">Explore hampers</a></div>`);
   }
 
   function notice(message) {
@@ -185,32 +198,54 @@
     busy = true;
     const button = form.querySelector('button[type="submit"]');
     const status = form.querySelector('[data-checkout-status]');
+    const unlock = () => { busy = false; button.disabled = false; };
     button.disabled = true; status.textContent = 'Preparing your secure payment…';
     try {
       if (!user || !client) throw new Error('Please sign in before checkout.');
       const address = Object.fromEntries(new FormData(form));
+      const provider = address.provider;
+      if (!['razorpay', 'payu'].includes(provider) || !config.providers?.[provider]) throw new Error('Choose an available payment provider.');
+      delete address.provider;
       const items = [...cart].map(([key, quantity]) => ({ key, quantity }));
-      const { data, error } = await client.functions.invoke('create-checkout-order', { body: { items, address } });
+      const { data, error } = await client.functions.invoke('create-checkout-order', { body: { items, address, provider } });
       if (error) throw new Error('Checkout could not start. Please try again later.');
+      if (data?.provider !== provider) throw new Error('The payment provider did not match. Please try again.');
+      if (provider === 'payu') {
+        const action = new URL(data.action);
+        if (!['test.payu.in', 'secure.payu.in'].includes(action.hostname) || action.pathname !== '/_payment' || action.protocol !== 'https:') throw new Error('Invalid PayU checkout destination');
+        const paymentForm = document.createElement('form');
+        paymentForm.method = 'POST'; paymentForm.action = action.href; paymentForm.hidden = true;
+        for (const [key, value] of Object.entries(data.fields || {})) {
+          if (!['key', 'txnid', 'amount', 'productinfo', 'firstname', 'email', 'phone', 'udf1', 'surl', 'furl', 'hash'].includes(key) || typeof value !== 'string') continue;
+          const input = document.createElement('input'); input.name = key; input.value = value; paymentForm.append(input);
+        }
+        document.body.append(paymentForm);
+        status.textContent = 'Opening PayU India…';
+        paymentForm.submit();
+        return;
+      }
       await loadRazorpay();
+      let verifying = false;
       const checkout = new window.Razorpay({
         key: data.key_id, amount: data.amount_paise, currency: 'INR', name: 'Hamperia Solutions',
         description: 'Gift order', order_id: data.razorpay_order_id,
         prefill: { name: address.full_name, email: user.email, contact: address.phone },
         handler: async response => {
+          verifying = true;
           status.textContent = 'Verifying payment…';
-          const { data: verified, error: verificationError } = await client.functions.invoke('verify-checkout-payment', {
-            body: { order_id: data.order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature }
-          });
-          if (verificationError || !verified?.paid) { status.textContent = 'Payment is processing. Check Your orders before trying again.'; return; }
-          cart.clear(); persist(); window.location.assign(link('orders/'));
+          try {
+            const { data: verified, error: verificationError } = await client.functions.invoke('verify-checkout-payment', {
+              body: { order_id: data.order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature }
+            });
+            if (verificationError || !verified?.paid) { status.textContent = 'Payment is processing. Check Your orders before trying again.'; unlock(); return; }
+            cart.clear(); persist(); window.location.assign(link('orders/'));
+          } catch { status.textContent = 'Payment is processing. Check Your orders before trying again.'; unlock(); }
         },
-        modal: { ondismiss: () => { status.textContent = 'Payment was not completed. Your basket is saved.'; } }
+        modal: { ondismiss: () => { if (!verifying) { status.textContent = 'Payment was not completed. Your basket is saved.'; unlock(); } } }
       });
       checkout.on('payment.failed', () => { status.textContent = 'Payment failed. Your basket is saved; please try again.'; });
       checkout.open();
-    } catch (error) { status.textContent = error.message || 'Checkout failed. Please try again.'; }
-    finally { busy = false; button.disabled = false; }
+    } catch (error) { status.textContent = error.message || 'Checkout failed. Please try again.'; unlock(); }
   }
 
   document.addEventListener('click', event => {
@@ -218,6 +253,7 @@
     const add = event.target.closest('[data-cart-key]');
     const remove = event.target.closest('[data-remove-item]');
     if (wish) {
+      if (!user) { window.hamperia?.promptSignIn('Sign in to save products to your wishlist.'); return; }
       const key = wish.dataset.wishKey;
       if (wishlist.has(key)) wishlist.delete(key); else wishlist.add(key);
       persist(); renderView();
@@ -225,6 +261,7 @@
         ? client.from('wishlist_items').upsert({ user_id: user.id, product_key: key }, { onConflict: 'user_id,product_key' })
         : client.from('wishlist_items').delete().eq('user_id', user.id).eq('product_key', key));
     } else if (add) {
+      if (!user) { window.hamperia?.promptSignIn('Sign in to add products to your basket.'); return; }
       const key = add.dataset.cartKey;
       if (!products.has(key)) return;
       cart.set(key, Math.min(10, (cart.get(key) || 0) + 1)); persist(); renderView(); notice('Added to your basket.');

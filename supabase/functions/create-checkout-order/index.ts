@@ -1,4 +1,5 @@
-import { admin, cors, identity, json, razorpay, secret } from '../_shared/commerce.ts';
+import { cors, identity, json, razorpay, secret } from '../_shared/commerce.ts';
+import { amountRupees, requestHashInput, sha512 } from '../_shared/payu.mjs';
 
 type CartItem = { key: string; quantity: number };
 const shippingPaise = 9900;
@@ -9,9 +10,12 @@ Deno.serve(async req => {
   try {
     // The browser sends identifiers only. Prices always come from database records.
     const { db, user } = await identity(req);
+    if (!user.email) return json({ error: 'An email address is required for checkout' }, 400);
     const input = await req.json();
     const items: CartItem[] = input.items;
     const address = input.address;
+    const provider = input.provider;
+    if (!['razorpay', 'payu'].includes(provider)) return json({ error: 'Choose a payment provider' }, 400);
     if (!Array.isArray(items) || !items.length || items.length > 30) return json({ error: 'Invalid basket' }, 400);
     if (!address || typeof address !== 'object') return json({ error: 'Delivery address is required' }, 400);
     for (const field of ['full_name', 'phone', 'line1', 'city', 'state', 'pincode']) {
@@ -42,11 +46,30 @@ Deno.serve(async req => {
     const total = subtotal + shippingPaise;
     if (!Number.isSafeInteger(total) || total < shippingPaise + 100 || total > 1000000000) return json({ error: 'Invalid order total' }, 400);
     const orderId = crypto.randomUUID();
-    const gatewayOrder = await razorpay('orders', 'POST', { amount: total, currency: 'INR', receipt: orderId, notes: { shop_order_id: orderId } });
-    const { error: orderError } = await db.from('shop_orders').insert({ id: orderId, user_id: user.id, subtotal_paise: subtotal, shipping_paise: shippingPaise, total_paise: total, delivery_address: cleanedAddress, gift_note: giftNote, razorpay_order_id: gatewayOrder.id });
+    let gatewayOrder: { id: string } | undefined;
+    let payuFields: Record<string, string> | undefined;
+    let payuUrl: string | undefined;
+    if (provider === 'razorpay') {
+      gatewayOrder = await razorpay('orders', 'POST', { amount: total, currency: 'INR', receipt: orderId, notes: { shop_order_id: orderId } });
+      if (!gatewayOrder?.id) throw new Error('Payment service did not create an order');
+    } else {
+      const mode = secret('PAYU_MODE');
+      if (!['test', 'live'].includes(mode)) throw new Error('PayU mode is not configured');
+      const callback = `${secret('SUPABASE_URL')}/functions/v1/payu-return`;
+      payuUrl = mode === 'live' ? 'https://secure.payu.in/_payment' : 'https://test.payu.in/_payment';
+      payuFields = {
+        key: secret('PAYU_KEY'), txnid: orderId.replaceAll('-', '').slice(0, 24), amount: amountRupees(total),
+        productinfo: 'Hamperia gift order', firstname: cleanedAddress.full_name.split(/\s+/)[0].slice(0, 20),
+        email: user.email, phone: cleanedAddress.phone, udf1: orderId, surl: callback, furl: callback
+      };
+      payuFields.hash = await sha512(requestHashInput(payuFields, secret('PAYU_SALT')));
+    }
+    const { error: orderError } = await db.from('shop_orders').insert({ id: orderId, user_id: user.id, subtotal_paise: subtotal, shipping_paise: shippingPaise, total_paise: total, delivery_address: cleanedAddress, gift_note: giftNote, payment_provider: provider, razorpay_order_id: gatewayOrder?.id || null, payu_txn_id: payuFields?.txnid || null });
     if (orderError) throw new Error('Unable to save the order');
     const { error: lineError } = await db.from('shop_order_items').insert(lines.map(line => ({ order_id: orderId, ...line })));
     if (lineError) { await db.from('shop_orders').delete().eq('id', orderId); throw new Error('Unable to save the order items'); }
-    return json({ order_id: orderId, razorpay_order_id: gatewayOrder.id, amount_paise: total, key_id: secret('RAZORPAY_KEY_ID') });
+    return provider === 'razorpay'
+      ? json({ provider, order_id: orderId, razorpay_order_id: gatewayOrder?.id, amount_paise: total, key_id: secret('RAZORPAY_KEY_ID') })
+      : json({ provider, order_id: orderId, amount_paise: total, action: payuUrl, fields: payuFields });
   } catch (error) { return json({ error: error instanceof Error ? error.message : 'Checkout failed' }, 400); }
 });

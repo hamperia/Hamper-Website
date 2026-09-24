@@ -1,5 +1,9 @@
 {
   "paymentsEnabled": false,
+  "providers": {
+    "razorpay": false,
+    "payu": false
+  },
   "shippingPaise": 9900,
   "currency": "INR"
 }

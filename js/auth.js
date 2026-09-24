@@ -6,7 +6,7 @@
   function afterLoginUrl() {
     const path = sessionStorage.getItem('hamperia_after_login');
     sessionStorage.removeItem('hamperia_after_login');
-    return url(path === 'checkout/' ? path : '');
+    return url(path && /^[a-z0-9-]+(?:\/[a-z0-9-]+)?\/$/.test(path) ? path : '');
   }
   const client = window.supabase?.createClient(
     'https://gphkitnnjdqbxgwqtjpl.supabase.co',
@@ -22,7 +22,26 @@
   let resolveReady;
   const ready = new Promise((resolve) => { resolveReady = resolve; });
   const state = { session: null, user: null, profile: null, role: 'consumer' };
-  window.hamperia = { client, ready, state, adminEmail: 'contact@hamperiasolutions.com' };
+  window.hamperia = { client, ready, state, adminEmail: 'contact@hamperiasolutions.com', sessionListeners: [], beforeSignOutListeners: [] };
+
+  function promptSignIn(message = 'Sign in to save this to your Hamperia account.') {
+    let panel = document.querySelector('[data-signin-prompt]');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.className = 'signin-prompt';
+      panel.dataset.signinPrompt = '';
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.innerHTML = `<div class="signin-prompt-card"><button type="button" class="signin-prompt-close" data-close-signin-prompt aria-label="Close">×</button><h2>Sign in to continue</h2><p data-signin-prompt-message></p><a class="button" href="${url('auth/')}">Sign in or create an account</a></div>`;
+      document.body.append(panel);
+      panel.addEventListener('click', event => { if (event.target === panel || event.target.closest('[data-close-signin-prompt]')) panel.remove(); });
+    }
+    panel.querySelector('[data-signin-prompt-message]').textContent = message;
+    const relative = window.location.pathname.replace(new URL(url()).pathname, '');
+    if (/^[a-z0-9-]+(?:\/[a-z0-9-]+)?\/$/.test(relative)) sessionStorage.setItem('hamperia_after_login', relative);
+    panel.querySelector('a').focus();
+  }
+  window.hamperia.promptSignIn = promptSignIn;
 
   function status(message, type = '') {
     document.querySelectorAll('[data-auth-status]').forEach((node) => {
@@ -92,6 +111,7 @@
     document.querySelectorAll('[data-auth-required]').forEach((node) => { node.hidden = complete; });
     if (pendingUser) prepareSignup(pendingUser, profile);
     if (typeof window.hamperia.onSession === 'function') await window.hamperia.onSession(state);
+    for (const listener of window.hamperia.sessionListeners || []) await listener(state);
   }
   function getIntent() {
     if (window.location.pathname.includes('/auth/callback/')) {
@@ -264,6 +284,8 @@
     if (event.target.closest('[data-signout]')) void run(async () => {
       const { error } = await client.auth.signOut({ scope: 'local' });
       if (error) throw error;
+      for (const listener of window.hamperia.beforeSignOutListeners) listener();
+      for (const key of ['hamperia_cart_guest_v2', 'hamperia_wishlist_guest_v2', 'hamperia_cart_v1', 'hamperia_wishlist_v1', 'hamperia_builder_v1']) localStorage.removeItem(key);
       window.location.assign(url());
     });
   });

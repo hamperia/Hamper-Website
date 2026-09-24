@@ -41,8 +41,14 @@
     rail.querySelector('[data-rail-prev]')?.addEventListener('click', () => track.scrollBy({ left: -track.clientWidth * .8, behavior: 'smooth' }));
     rail.querySelector('[data-rail-next]')?.addEventListener('click', () => track.scrollBy({ left: track.clientWidth * .8, behavior: 'smooth' }));
   });
-  const commerce = document.createElement('script');
-  commerce.src = new URL('./commerce.js', document.currentScript.src).href;
+  const scriptBase = document.currentScript.src;
+  const shoppingState = document.createElement('script');
+  shoppingState.src = new URL('./shopping-state.js', scriptBase).href;
+  shoppingState.onload = () => {
+    const commerce = document.createElement('script');
+    commerce.src = new URL('./commerce.js', scriptBase).href;
+    document.head.append(commerce);
+  };
   const commerceStyles = document.createElement('link');
   commerceStyles.rel = 'stylesheet';
   commerceStyles.href = new URL('../css/commerce.css', document.currentScript.src).href;
@@ -51,5 +57,5 @@
   builderStyles.rel = 'stylesheet';
   builderStyles.href = new URL('../css/hamper-builder.css', document.currentScript.src).href;
   document.head.append(builderStyles);
-  document.head.append(commerce);
+  document.head.append(shoppingState);
 })();

@@ -35,3 +35,5 @@
 .builder-availability-label{font-weight:600}
 .footer-browse a{text-decoration:underline;text-underline-offset:3px}
 @media(max-width:650px){.builder-back-links{margin-top:0;flex-direction:column}.builder-purchase-choices section{padding:13px}}
+.builder-composition.magnetic-box{border-color:#234436;border-radius:6px;background:#f6f0e4}
+.builder-composition.round-box{border-color:#c9ae7d;border-radius:45%;background:#f5eedf}

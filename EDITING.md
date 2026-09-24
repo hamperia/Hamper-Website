@@ -12,7 +12,7 @@ This directory is the website repository. GitHub Pages serves the HTML, CSS, Jav
 - `producer/index.html`, `js/producer.js`: product submissions and status history.
 - `admin/index.html`, `js/admin.js`: admin review and role tools.
 - `content/seo-map.csv`: generated mapping of collections/articles to URLs and topics.
-- `js/commerce.js`, `css/commerce.css`: wishlist, basket, checkout and order history.
+- `js/commerce.js`, `js/shopping-state.js`, `css/commerce.css`: account-scoped wishlist and basket, checkout and order history.
 - `js/hamper-builder.js`, `css/hamper-builder.css`: the three-step DIY builder, live illustrative preview, collection galleries and merchandise tiles. Builder choices currently request a quote because most component prices are not set.
 - `content/commerce-config.json`: ₹99 shipping display and payment activation flag. See `CHECKOUT_SETUP.md` before changing the flag.
 
@@ -20,7 +20,7 @@ From this directory, run `node scripts/build-storefront.cjs` after editing gener
 
 ## Preview and publication
 
-The current local preview is http://127.0.0.1:4173/. Refresh after saving. Preview changes before pushing this repository to GitHub. Keep `CNAME` set to `hamperiasolutions.com`.
+Run `node scripts/serve.cjs` from this directory, then open http://127.0.0.1:4173/. Refresh after saving. Run `node --test tests/*.test.cjs` for the unit and local route checks. Preview changes before pushing this repository to GitHub. Keep `CNAME` set to `hamperiasolutions.com`.
 
 Review `git diff` and `git status` before committing. Include the generated pages, assets, CSS and JavaScript in the same commit. The current changes have not been deployed by this build.
 
@@ -38,7 +38,8 @@ The database schema and registration migration are in `supabase/`. Product host 
 - Product enquiries open an email draft. Bulk enquiries also require the visitor to send the draft; the website does not claim it sent an email or store a lead automatically.
 - Hosts submit an image URL, and products appear publicly only after approval. Admin rejection feedback is visible in the host's submissions.
 - Blogs are currently generated static pages, edited in the build script; there is no database-backed blog editor yet.
-- Wishlist and basket work locally. Online checkout is deliberately disabled until Razorpay onboarding, Supabase migration/function deployment and payment tests in `CHECKOUT_SETUP.md` are complete.
+- Wishlist and basket are hidden when signed out, saved per signed-in account in this browser, and restored when that account returns. The wishlist also syncs to Supabase after the commerce SQL migration; the basket and builder choices do not sync across devices. Signed-out visitors are asked to sign in before adding products or choosing builder items.
+- Online checkout is deliberately disabled until Razorpay or PayU India onboarding, Supabase migration/function deployment, and payment tests in `CHECKOUT_SETUP.md` are complete.
 - Successful Google signup, profile persistence, and sign-out/relogin must be checked with the account owner before production publication. Automated mocked tests are not a substitute for that account-level check.
 
 ## Product collections and images

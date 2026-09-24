@@ -19,3 +19,7 @@
 @media(max-width:1400px){.nav-contact{display:none}}
 @media(min-width:761px) and (max-width:1200px){.nav-links{order:3;width:100%;justify-content:center}}
 @media(max-width:760px){.nav-row{display:grid;grid-template-columns:1fr auto}.auth-controls{grid-column:1/-1;margin-top:0;min-width:0}.nav-links{top:100%}.auth-user{justify-content:flex-start}.auth-guest{width:max-content}.menu{white-space:nowrap}}
+.signin-prompt{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:#16221bcc}
+.signin-prompt-card{position:relative;width:min(100%,420px);padding:30px;background:#fffdf8;border:1px solid #d9d8cc;box-shadow:0 24px 70px #0004;text-align:center}
+.signin-prompt-card h2{margin:4px 0 12px}.signin-prompt-card p{line-height:1.6}.signin-prompt-card .button{display:inline-block;margin-top:10px}
+.signin-prompt-close{position:absolute;right:12px;top:8px;border:0;background:transparent;font-size:26px;line-height:1;cursor:pointer}

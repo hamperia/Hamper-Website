@@ -19,8 +19,8 @@ Deno.serve(async req => {
     if (event.event === 'payment.captured') {
       const payment = event.payload?.payment?.entity;
       if (!payment?.id || !payment.order_id || payment.status !== 'captured') throw new Error('Invalid captured payment payload');
-      const { data: order, error } = await db.from('shop_orders').select('id,total_paise,status').eq('razorpay_order_id', payment.order_id).maybeSingle();
-      if (error || !order || order.total_paise !== payment.amount || payment.currency !== 'INR') throw new Error('Payment does not match an order');
+      const { data: order, error } = await db.from('shop_orders').select('id,total_paise,status,payment_provider').eq('razorpay_order_id', payment.order_id).maybeSingle();
+      if (error || !order || order.payment_provider !== 'razorpay' || order.total_paise !== payment.amount || payment.currency !== 'INR') throw new Error('Payment does not match an order');
       if (order.status === 'payment_pending') {
         const { error: updateError } = await db.from('shop_orders').update({ status: 'paid', razorpay_payment_id: payment.id, paid_at: new Date().toISOString() }).eq('id', order.id).eq('status', 'payment_pending');
         if (updateError) throw updateError;
