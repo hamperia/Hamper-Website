@@ -57,5 +57,9 @@
   builderStyles.rel = 'stylesheet';
   builderStyles.href = new URL('../css/hamper-builder.css', document.currentScript.src).href;
   document.head.append(builderStyles);
+  const navigationStyles = document.createElement('link');
+  navigationStyles.rel = 'stylesheet';
+  navigationStyles.href = new URL('../css/navigation-polish.css', document.currentScript.src).href;
+  document.head.append(navigationStyles);
   document.head.append(shoppingState);
 })();

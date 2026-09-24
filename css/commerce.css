@@ -17,3 +17,5 @@
 .payment-methods label{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #e0e1d7;background:#fffdf8;cursor:pointer}
 .payment-methods label:has(input:disabled){opacity:.65;cursor:not-allowed}
 .payment-methods input{accent-color:#465a45}
+small[data-product-stock]{display:block;margin:6px 0 12px;color:#59634f;font-weight:600}
+.product-stock{color:#59634f;font-weight:600}

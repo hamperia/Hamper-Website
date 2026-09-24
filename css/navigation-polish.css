@@ -1,0 +1,62 @@
+.announcement{font-size:10px;letter-spacing:.16em;padding:7px 14px}
+.header{box-shadow:0 5px 22px rgba(57,42,32,.045)}
+.nav-row{gap:14px;min-height:86px}
+.brand-logo{width:51px;height:51px;flex-basis:51px}
+.brand-name{font-size:23px;line-height:1}
+.brand-name small{font-size:8px;letter-spacing:.26em;margin-top:5px}
+.nav-links{gap:18px;margin-left:auto;font-size:12px;font-weight:500}
+.nav-links>a,.nav-links>.corporate-menu>summary{position:relative;padding:10px 0;white-space:nowrap;transition:color .2s}
+.nav-links>a:hover,.nav-links>.corporate-menu>summary:hover,.nav-links>a[aria-current=page]{color:#765347}
+.nav-links>a[aria-current=page]:after{content:"";position:absolute;left:0;right:0;bottom:3px;height:2px;background:#9d7563}
+.commerce-shortcuts{gap:7px;margin-left:7px}
+.commerce-shortcuts a{position:relative;width:38px;height:38px;justify-content:center;border-radius:50%;color:#4c4b41;transition:background .2s}
+.commerce-shortcuts a:hover{background:#efe9df}
+.commerce-shortcuts svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linejoin:round;stroke-linecap:round}
+.shortcut-count{position:absolute;top:-3px;right:-4px;min-width:17px;height:17px;padding:0 3px;background:#94684f;color:white;font:10px/17px Arial,sans-serif;text-align:center}
+.auth-controls{flex:0 0 auto}
+.auth-guest{display:inline-flex;align-items:center;justify-content:center;border:1px solid #cbb9a7;border-radius:22px;padding:9px 15px;background:#fffdf8;font-size:12px;font-weight:600;white-space:nowrap}
+.auth-guest:hover{background:#eee6dc}
+.profile-trigger{border-color:#cbb9a7;padding:8px 11px;background:#fffdf8}
+.profile-trigger:hover{background:#eee6dc}
+.mega-menu{border-radius:0 0 12px 12px}
+.nav-links.open>a,.nav-links.open .corporate-menu>summary{font-size:15px}
+.shop-card-image{overflow:hidden}
+.shop-card-image img{transition:transform .35s ease}
+.shop-card a:hover .shop-card-image img{transform:scale(1.045)}
+.product-contents{margin:22px 0;padding:20px 24px;background:#f4eee5;border-left:3px solid #aa8866}
+.product-contents h3{font-size:21px;margin:0 0 10px}
+.product-contents ul{margin:0;padding-left:20px;line-height:1.8}
+.product-contents-note{font-size:12px;color:#73665a;margin-top:8px}
+.inspiration-grid{margin-top:28px}
+.inspiration-card .shop-card-body{padding:20px 22px 25px}
+.inspiration-card .shop-card-body h3{font-size:22px}
+.inspiration-card .shop-card-body p{font-size:13px;color:#6b6259}
+.inspiration-card .shop-card-link{display:inline-block;margin-top:12px}
+@media(max-width:1360px){
+ .nav-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:10px;min-height:72px;padding-top:10px;padding-bottom:10px}
+ .brand{grid-column:1;grid-row:1;min-width:0}
+ .commerce-shortcuts{grid-column:2;grid-row:1;margin:0}
+ .auth-controls{grid-column:3;grid-row:1;margin:0}
+ .menu{grid-column:4;grid-row:1;margin:0;border-radius:22px;padding:8px 12px;white-space:nowrap}
+ .nav-links{grid-column:1/-1;grid-row:2;width:100%;margin:0;order:initial}
+ .nav-links.open{padding:14px 0 5px;border-top:1px solid #e7ddd3}
+ .mega-menu{max-height:60vh;overflow-y:auto}
+}
+@media(max-width:700px){
+ .nav-row{width:calc(100% - 28px);gap:6px;grid-template-columns:minmax(0,1fr) auto auto auto}
+ .brand{gap:5px}
+ .brand-logo{width:36px;height:36px;flex-basis:36px}
+ .brand-name{font-size:19px}
+ .brand-name small{font-size:6px;letter-spacing:.2em;margin-top:3px}
+ .commerce-shortcuts{gap:1px}
+ .commerce-shortcuts a{width:32px;height:35px}
+ .commerce-shortcuts svg{width:17px;height:17px}
+ .auth-guest{padding:7px 9px;font-size:11px}
+ .profile-trigger{padding:7px;gap:4px;font-size:11px}
+ .profile-trigger svg{width:16px;height:16px}
+ .menu{font-size:11px;padding:7px 8px}
+ .nav-links.open{display:flex;flex-direction:column;gap:0}
+ .mega-grid{grid-template-columns:1fr 1fr;gap:16px}
+}
+@media(max-width:390px){.brand-name small{display:none}.brand-name{font-size:17px}.menu-word{display:none}.menu-icon{font-size:17px}.profile-trigger .auth-user-name{max-width:50px;overflow:hidden;text-overflow:ellipsis}}
+@media(prefers-reduced-motion:reduce){.shop-card-image img{transition:none}}

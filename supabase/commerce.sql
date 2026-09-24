@@ -112,4 +112,4 @@ insert into public.catalog_products (slug,name,price_paise,active) values
 ('gold-tulle-wrap','Gold Tulle Net Wrapping',25000,true),
 ('paper-filler','Shredded Paper Filler',15000,true),
 ('tags-and-ribbons','Custom Tags & Satin Ribbons',10000,true)
-on conflict (slug) do update set name=excluded.name, price_paise=excluded.price_paise, active=excluded.active;
+on conflict (slug) do nothing; -- Admin edits are authoritative after the initial seed.

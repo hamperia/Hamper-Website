@@ -6,7 +6,7 @@
     <title>
       Admin dashboard | Hamperia Solutions
     </title>
-    <meta name="description" content="Review producer product submissions for Hamperia Solutions.">
+    <meta name="description" content="Manage Hamperia product images, collections, prices and inventory.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/branding.css">
     <link rel="stylesheet" href="../css/auth.css">
@@ -18,6 +18,9 @@
     </script>
     <script src="../js/admin.js" defer>
     </script>
+    <script src="../js/catalog-rules.js" defer></script>
+    <script src="../js/catalog-admin.js" defer></script>
+    <link rel="stylesheet" href="../css/catalog-admin.css">
     <link rel="stylesheet" href="../css/storefront.css">
     <script src="../js/storefront.js" defer>
     </script>
@@ -40,13 +43,13 @@
           Admin review
         </p>
         <h1>
-          Keep every product
+          Make every product
           <em>
             thoughtful.
           </em>
         </h1>
         <p class="description">
-          Review producer submissions and decide what is ready to appear in the public catalogue.
+          Add images, choose collections, set prices and keep track of available stock.
         </p>
       </section>
       <section class="wrap review-list">
@@ -58,9 +61,32 @@
             Sign in with the Hamperia admin account to review products.
           </p>
           <a class="button" href="../auth/">
-            Sign in with Google
+            Sign in
           </a>
         </div>
+        <section class="catalog-admin" data-catalog-admin hidden>
+          <div class="section-heading"><div><p class="eyebrow">Catalogue control</p><h2>Products & inventory</h2></div><p>Only contact@hamperiasolutions.com can save published product details.</p></div>
+          <p class="form-status" data-catalog-status role="status"></p>
+          <form class="catalog-editor" data-catalog-form>
+            <h3 data-editor-heading>Add a product</h3>
+            <input type="hidden" name="editing_slug">
+            <div class="form-grid">
+              <div class="field"><label for="catalog-name">Product name *</label><input id="catalog-name" name="name" required maxlength="120"></div>
+              <div class="field"><label for="catalog-slug">URL slug *</label><input id="catalog-slug" name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="100" placeholder="dry-fruit-five-jar-box"></div>
+              <div class="field"><label for="catalog-price">Price in ₹ *</label><input id="catalog-price" name="price" type="number" min="1" step="0.01" required></div>
+              <div class="field"><label for="catalog-stock">Available quantity *</label><input id="catalog-stock" name="stock" type="number" min="0" step="1" required></div>
+              <div class="field"><label for="catalog-type">Product type *</label><select id="catalog-type" name="product_type" required><option value="hamper">Gift hamper</option><option value="dry_fruit_box">Dry-fruit box</option><option value="welcome_kit">Welcome kit</option><option value="diy_supply">Hamperia supply</option><option value="merchandise">Corporate merchandise</option></select></div>
+              <div class="field"><label for="catalog-image">Product image</label><input id="catalog-image" name="image" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG or WebP, up to 5 MB. Required for new products.</small></div>
+            </div>
+            <div class="field"><label for="catalog-description">Description *</label><textarea id="catalog-description" name="description" required minlength="20" maxlength="1200" rows="3"></textarea></div>
+            <div class="field"><label for="catalog-contents">What's inside (one item per line)</label><textarea id="catalog-contents" name="contents" maxlength="2000" rows="5" placeholder="Insulated bottle&#10;Notebook&#10;Pen"></textarea><small>Shown on the product detail page. Required for a complete hamper or welcome kit.</small></div>
+            <fieldset class="catalog-tags"><legend>Show in these collections *</legend><div data-catalog-tags></div><p>Only a dry-fruit box can be tagged for Dry Fruit Hampers.</p></fieldset>
+            <label class="catalog-publish"><input type="checkbox" name="active" checked> Published on the website</label>
+            <div class="form-actions"><button class="button" type="submit">Save product</button><button class="button secondary" type="button" data-catalog-reset>Clear form</button></div>
+          </form>
+          <h3>Current products</h3>
+          <div data-catalog-list></div>
+        </section>
         <div id="pending-products" hidden>
           <p class="form-status">
             Loading submissions...
@@ -71,44 +97,6 @@
           <p>Paid orders can be marked fulfilled after dispatch.</p>
           <div data-admin-orders-list role="status">Loading orders...</div>
         </section>
-        <div class="inquiry" data-admin-tools hidden>
-          <h2>
-            Assign producer access
-          </h2>
-          <p class="form-intro">
-            Only the admin can promote a signed-in consumer to producer. The user will then be able to submit products for review.
-          </p>
-          <form id="role-form">
-            <div class="form-grid">
-              <div class="field">
-                <label for="role-email">
-                  Google account email *
-                </label>
-                <input id="role-email" name="email" type="email" required placeholder="producer@example.com">
-              </div>
-              <div class="field">
-                <label for="role-value">
-                  Role *
-                </label>
-                <select id="role-value" name="role" required>
-                  <option value="producer">
-                    Producer
-                  </option>
-                  <option value="consumer">
-                    Consumer
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="button" type="submit">
-                Save role
-              </button>
-              <p class="form-status" id="role-status" role="status" hidden>
-              </p>
-            </div>
-          </form>
-        </div>
       </section>
     </main>
     <footer class="footer"><div class="wrap"><div class="footer-top"><div><h2>Made to mean more.</h2><p>Personalised hampers, creative supplies and thoughtful corporate gifts.</p><p class="footer-browse"><a href="../">Home</a> · <a href="../hamperia/">Hamperia Store</a> · <a href="../hampers/">Personalised Hampers</a> · <a href="../corporate-bulk-gifting/">Corporate gifting</a></p></div><div class="footer-contact"><a href="mailto:contact@hamperiasolutions.com">contact@hamperiasolutions.com</a><p><a href="../bulk-orders/">Request a quotation</a> · <a href="../blog/">Ideas & guides</a></p></div></div><div class="footer-bottom"><span>© 2026 Hamperia Solutions</span><span>Little moments. Big happiness.</span></div></div></footer>

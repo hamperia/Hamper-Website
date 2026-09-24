@@ -42,7 +42,7 @@
     if (account && !document.querySelector('.commerce-shortcuts')) {
       const shortcuts = document.createElement('div');
       shortcuts.className = 'commerce-shortcuts';
-      shortcuts.innerHTML = `<a href="${link('wishlist/')}" aria-label="Wishlist"><span aria-hidden="true">♡</span><span class="shortcut-label">Wishlist</span><span class="shortcut-count" data-wish-count>0</span></a><a href="${link('cart/')}" aria-label="Basket"><span aria-hidden="true">▣</span><span class="shortcut-label">Basket</span><span class="shortcut-count" data-cart-count>0</span></a>`;
+      shortcuts.innerHTML = `<a href="${link('wishlist/')}" aria-label="Wishlist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.3 5.3 0 0 0-7.5 0L12 5.9l-1.3-1.3a5.3 5.3 0 0 0-7.5 7.5L12 21l8.8-8.9a5.3 5.3 0 0 0 0-7.5Z"/></svg><span class="shortcut-count" data-wish-count>0</span></a><a href="${link('cart/')}" aria-label="Basket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 9 2 11h12l2-11H4ZM8 9l4-6 4 6M4 9h16M9 13v4m6-4v4"/></svg><span class="shortcut-count" data-cart-count>0</span></a>`;
       account.before(shortcuts);
     }
     document.querySelectorAll('[data-product-card]').forEach(card => {
@@ -85,6 +85,108 @@
     persist();
   }
 
+  function applyCatalog(catalogue, rows) {
+    const originals = new Map((catalogue.products || []).map(item => [item.slug, item]));
+    const records = new Map((rows || []).map(row => [row.slug, row]));
+    const contentsFor = (row, fallback) => row.contents?.length ? row.contents : fallback?.contents || [];
+    const contentsMarkup = items => items.length ? `<section class="product-contents" data-product-contents><h3>What's inside</h3><ul>${items.map(item => `<li>${escape(item)}</li>`).join('')}</ul><p class="product-contents-note">Please confirm exact brands, quantities, colours and any substitutions before ordering.</p></section>` : '';
+    const imageFor = (row, fallback) => /^https:\/\//i.test(row.image_url || '') ? row.image_url : fallback ? link(`assets/${fallback.image}`) : '';
+    const tagsFor = (row, fallback) => row.collection_tags?.length ? row.collection_tags : fallback?.tags || [];
+    const typeFor = row => row.product_type || (row.slug.startsWith('dry-fruit-') ? 'dry_fruit_box' : 'hamper');
+    const stockFor = row => row.stock_quantity === undefined ? 10 : row.stock_quantity;
+    for (const row of rows || []) {
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(row.slug)) continue;
+      const key = `catalog:${row.slug}`;
+      if (!row.active) { products.delete(key); continue; }
+      const fallback = originals.get(row.slug);
+      products.set(key, { key, name: row.name, pricePaise: Number(row.price_paise),
+        image: imageFor(row, fallback), url: fallback ? link(`products/${row.slug}/`) : link(`products/item/?slug=${encodeURIComponent(row.slug)}`),
+        category: typeFor(row), stockQuantity: stockFor(row) ?? null });
+    }
+    const collection = document.querySelector('[data-collection-slug]');
+    const pageSlug = location.pathname.replace(/\/$/, '').split('/').pop();
+    const collectionSlug = collection?.dataset.collectionSlug || (pageSlug === 'hampers' ? 'gift-hampers' : pageSlug === 'hamperia' ? 'hamperia' : null);
+    const budget = /^gifts-under-(\d+)$/.exec(collectionSlug || '');
+    const matchesCollection = (row, fallback) => budget
+      ? Number(row.price_paise) < Number(budget[1]) * 100
+      : tagsFor(row, fallback).includes(collectionSlug) &&
+        (collectionSlug !== 'dry-fruit-hampers' || typeFor(row) === 'dry_fruit_box');
+    document.querySelectorAll('[data-product-card][data-product-slug]').forEach(card => {
+      const slug = card.dataset.productSlug;
+      const row = records.get(slug);
+      if (!row) return;
+      const fallback = originals.get(slug);
+      card.hidden = !row.active || Boolean(collection && !matchesCollection(row, fallback));
+      if (card.hidden) return;
+      card.dataset.price = Number(row.price_paise) / 100;
+      card.dataset.name = row.name.toLowerCase();
+      const image = card.querySelector('img');
+      if (image && row.image_url) { image.src = imageFor(row, fallback); image.alt = row.name; }
+      const title = card.querySelector('.shop-card-body h3');
+      if (title) title.textContent = row.name;
+      const price = card.querySelector('[data-product-price]');
+      if (price) price.textContent = money(Number(row.price_paise));
+      const stock = card.querySelector('[data-product-stock]') || document.createElement('small');
+      stock.dataset.productStock = '';
+      const quantity = stockFor(row);
+      stock.textContent = quantity === null || quantity === undefined ? 'Stock to confirm' : quantity ? `${quantity} available` : 'Out of stock';
+      card.querySelector('.shop-card-body')?.append(stock);
+      const button = card.querySelector('[data-cart-key]');
+      if (button) { button.disabled = quantity === 0; button.textContent = quantity === 0 ? 'Out of stock' : 'Add to cart'; }
+      const wish = card.querySelector('[data-wish-key]');
+      if (wish) wish.dataset.productName = row.name;
+    });
+    const grid = collection?.querySelector('[data-catalog-grid]') ||
+      (['hampers', 'hamperia'].includes(pageSlug) ? document.querySelector('.shop-grid') : null);
+    if (grid) for (const row of rows || []) {
+      if (!row.active || !matchesCollection(row, originals.get(row.slug))) continue;
+      if ([...grid.querySelectorAll('[data-product-slug]')].some(card => card.dataset.productSlug === row.slug)) continue;
+      const product = products.get(`catalog:${row.slug}`);
+      if (!product?.image) continue;
+      const card = document.createElement('article');
+      card.className = 'shop-card'; card.dataset.productCard = ''; card.dataset.productSlug = row.slug;
+      card.dataset.name = row.name.toLowerCase(); card.dataset.price = Number(row.price_paise) / 100;
+      card.innerHTML = `<a href="${escape(product.url)}"><span class="shop-card-image"><img src="${escape(product.image)}" alt="${escape(product.name)}" loading="lazy" width="600" height="500"></span><div class="shop-card-body"><span class="eyebrow">Hamperia product</span><h3>${escape(product.name)}</h3><p data-product-price>${money(product.pricePaise)}</p><small data-product-stock>${row.stock_quantity === 0 ? 'Out of stock' : row.stock_quantity == null ? 'Stock to confirm' : `${row.stock_quantity} available`}</small><span class="shop-card-link">View details ↗</span></div></a><div class="commerce-actions"><button class="wish-button" type="button" data-wish-key="${escape(product.key)}" data-product-name="${escape(product.name)}" aria-label="Add to wishlist: ${escape(product.name)}">♡</button><button class="add-button" type="button" data-cart-key="${escape(product.key)}" ${row.stock_quantity === 0 ? 'disabled' : ''}>${row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div>`;
+      grid.append(card);
+    }
+    const staticSlug = location.pathname.match(/\/products\/([^/]+)\/?$/)?.[1];
+    if (staticSlug && staticSlug !== 'item' && records.has(staticSlug)) {
+      const row = records.get(staticSlug);
+      const detail = document.querySelector('.product-detail');
+      if (detail) {
+        detail.hidden = !row.active;
+        if (row.active) {
+          const image = detail.querySelector('img');
+          if (image && row.image_url) { image.src = imageFor(row, originals.get(staticSlug)); image.alt = row.name; }
+          const heading = document.querySelector('.collection-intro h1');
+          if (heading) heading.textContent = row.name;
+          const price = detail.querySelector('h2');
+          if (price) price.textContent = money(Number(row.price_paise));
+          const description = detail.querySelector('[data-product-description]');
+          if (description) description.textContent = row.description || originals.get(staticSlug)?.description || '';
+          const contents = detail.querySelector('[data-product-contents]');
+          if (contents) contents.outerHTML = contentsMarkup(contentsFor(row, originals.get(staticSlug)));
+          else price?.insertAdjacentHTML('afterend', contentsMarkup(contentsFor(row, originals.get(staticSlug))));
+          const stock = document.createElement('p');
+          stock.className = 'product-stock';
+          stock.textContent = row.stock_quantity === null || row.stock_quantity === undefined ? 'Stock to confirm' : row.stock_quantity ? `${row.stock_quantity} available` : 'Out of stock';
+          price?.after(stock);
+          const button = detail.querySelector('[data-cart-key]');
+          if (button) { button.disabled = row.stock_quantity === 0; button.textContent = row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'; }
+        }
+      }
+    }
+    const dynamicDetail = document.querySelector('[data-catalog-detail]');
+    if (dynamicDetail) {
+      const slug = new URLSearchParams(location.search).get('slug');
+      const row = records.get(slug);
+      const product = products.get(`catalog:${slug}`);
+      dynamicDetail.innerHTML = row?.active && product?.image
+        ? `<p class="eyebrow"><a href="${link('')}">Home</a> / Product</p><div class="product-detail"><div class="product-image-frame"><img src="${escape(product.image)}" alt="${escape(product.name)}" width="700" height="650"></div><div><h1>${escape(product.name)}</h1><h2>${money(product.pricePaise)}</h2><p class="product-stock">${row.stock_quantity === 0 ? 'Out of stock' : row.stock_quantity == null ? 'Stock to confirm' : `${row.stock_quantity} available`}</p>${contentsMarkup(contentsFor(row, originals.get(slug)))}<p>${escape(row.description || originals.get(slug)?.description || '')}</p><div class="commerce-actions detail-actions"><button class="wish-button" type="button" data-wish-key="${escape(product.key)}" data-product-name="${escape(product.name)}" aria-label="Add to wishlist: ${escape(product.name)}">♡</button><button class="add-button" type="button" data-cart-key="${escape(product.key)}" ${row.stock_quantity === 0 ? 'disabled' : ''}>${row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div><a href="${link('hampers/')}">Explore more gifts →</a></div></div>`
+        : '<h1>Product unavailable</h1><p>This product is no longer listed. Explore our current collections.</p>';
+    }
+  }
+
   async function load() {
     const [catalogueResponse, configResponse] = await Promise.all([fetch(link('content/catalogue.json')), fetch(link('content/commerce-config.json'))]);
     if (!catalogueResponse.ok || !configResponse.ok) throw new Error('The shop catalogue is unavailable. Please refresh the page.');
@@ -92,7 +194,8 @@
     config = await configResponse.json();
     for (const item of catalogue.products || []) products.set(`catalog:${item.slug}`, {
       key: `catalog:${item.slug}`, name: item.name, pricePaise: Math.round(Number(item.price) * 100),
-      image: link(`assets/${item.image}`), url: link(`products/${item.slug}/`), category: item.category
+      image: link(`assets/${item.image}`), url: link(`products/${item.slug}/`), category: item.category,
+      stockQuantity: 10
     });
     addShoppingControls();
     if (window.hamperia) {
@@ -110,12 +213,8 @@
         persist(); renderView();
       });
       if (client) {
-        const { data } = await client.from('products').select('id,name,price,image_url,category').eq('status', 'approved');
-        for (const item of data || []) products.set(`maker:${item.id}`, {
-          key: `maker:${item.id}`, name: item.name, pricePaise: Math.round(Number(item.price) * 100),
-          image: /^https:\/\//i.test(item.image_url || '') ? item.image_url : link('assets/home_page.jpeg'),
-          url: link(item.category === 'diy' ? 'hamperia/' : 'hampers/'), category: item.category
-        });
+        const { data, error } = await client.from('catalog_products').select('*');
+        if (!error) applyCatalog(catalogue, data || []);
         await syncWishlist();
       }
     } else {
@@ -129,7 +228,7 @@
     const unavailable = !product;
     const key = product?.key || quantity.key;
     if (unavailable) return `<article class="commerce-item"><p>This product is no longer available.</p><button type="button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></article>`;
-    return `<article class="commerce-item"><a href="${escape(product.url)}"><img src="${escape(product.image)}" alt="${escape(product.name)}" loading="lazy" width="140" height="140"></a><div><h2><a href="${escape(product.url)}">${escape(product.name)}</a></h2><p>${money(product.pricePaise)}</p>${mode === 'cart' ? `<label>Quantity <input type="number" min="1" max="10" step="1" value="${quantity.quantity}" data-quantity-key="${escape(key)}"></label><p>Line total: ${money(product.pricePaise * quantity.quantity)}</p>` : `<button type="button" data-cart-key="${escape(key)}">Add to cart</button>`}<button type="button" class="text-button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></div></article>`;
+    return `<article class="commerce-item"><a href="${escape(product.url)}"><img src="${escape(product.image)}" alt="${escape(product.name)}" loading="lazy" width="140" height="140"></a><div><h2><a href="${escape(product.url)}">${escape(product.name)}</a></h2><p>${money(product.pricePaise)}</p>${mode === 'cart' ? `<label>Quantity <input type="number" min="1" max="${Math.min(10, product.stockQuantity ?? 10)}" step="1" value="${quantity.quantity}" data-quantity-key="${escape(key)}"></label><p>Line total: ${money(product.pricePaise * quantity.quantity)}</p>` : `<button type="button" data-cart-key="${escape(key)}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button>`}<button type="button" class="text-button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></div></article>`;
   }
 
   function totals() {
@@ -155,6 +254,7 @@
     const { entries, subtotal } = totals();
     if (!entries.length) { view.innerHTML = `<div class="commerce-empty"><h2>Your basket is empty.</h2><a class="button" href="${link('hamperia/')}">Browse products</a></div>`; return; }
     if (entries.some(x => !x.product)) { view.innerHTML = `<div class="commerce-empty"><h2>Review your basket first.</h2><p>One or more products are unavailable.</p><a class="button" href="${link('cart/')}">Review basket</a></div>`; return; }
+    if (entries.some(x => x.product.stockQuantity !== undefined && (x.product.stockQuantity === null || x.quantity > x.product.stockQuantity))) { view.innerHTML = `<div class="commerce-empty"><h2>Stock needs confirmation.</h2><p>One or more items in your basket do not have enough confirmed stock. Please review your basket or contact us.</p><a class="button" href="${link('cart/')}">Review basket</a></div>`; return; }
     if (!user) { view.innerHTML = `<div class="commerce-empty"><h2>Sign in to place an order.</h2><a class="button" href="${link('auth/')}" data-checkout-signin>Sign in or create an account</a></div>`; return; }
     const providers = config.providers || {};
     const razorpayReady = Boolean(config.paymentsEnabled && providers.razorpay);
@@ -264,6 +364,8 @@
       if (!user) { window.hamperia?.promptSignIn('Sign in to add products to your basket.'); return; }
       const key = add.dataset.cartKey;
       if (!products.has(key)) return;
+      const stock = products.get(key).stockQuantity;
+      if (stock === 0 || (stock !== null && stock !== undefined && (cart.get(key) || 0) >= stock)) { notice('No more stock is available for this item.'); return; }
       cart.set(key, Math.min(10, (cart.get(key) || 0) + 1)); persist(); renderView(); notice('Added to your basket.');
     } else if (remove) {
       const key = remove.dataset.removeItem;
@@ -279,7 +381,8 @@
   document.addEventListener('change', event => {
     const input = event.target.closest('[data-quantity-key]');
     if (!input) return;
-    input.value = String(Math.max(1, Math.min(10, Number.parseInt(input.value, 10) || 1)));
+    const maximum = Math.min(10, products.get(input.dataset.quantityKey)?.stockQuantity ?? 10);
+    input.value = String(Math.max(1, Math.min(maximum || 1, Number.parseInt(input.value, 10) || 1)));
     cart.set(input.dataset.quantityKey, Number(input.value)); persist(); renderView();
   });
   document.addEventListener('submit', event => {

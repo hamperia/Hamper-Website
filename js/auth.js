@@ -74,26 +74,17 @@
     signupForm.elements.email.value = user.email || '';
     signupForm.elements.email.readOnly = true;
     signupForm.elements.phone.value = profile?.phone || '';
-    signupForm.elements.business_name.value = profile?.business_name || '';
-    signupForm.elements.account_type.value = profile?.requested_role === 'producer' ? 'producer' : '';
     document.querySelectorAll('[data-google-signup-intro]').forEach((node) => { node.hidden = true; });
     text('[data-signup-heading]', 'Complete your account');
-    text('[data-signup-description]', 'Your Google details are filled in. Set your password and choose how you are joining.');
+    text('[data-signup-description]', 'Your Google details are filled in. Set a password to finish your customer account.');
     text('[data-password-signup]', 'Complete signup');
-    updateBusinessField();
-  }
-  function updateBusinessField() {
-    if (!signupForm) return;
-    const isHost = signupForm.elements.account_type.value === 'producer';
-    signupForm.elements.business_name.required = isHost;
-    document.querySelector('[data-business-field]').hidden = !isHost;
   }
   async function render(session, profile) {
     const complete = Boolean(session?.user && profile?.registration_completed);
     pendingUser = !complete ? session?.user || null : null;
     Object.assign(state, {
       session: complete ? session : null, user: complete ? session.user : null,
-      profile: complete ? profile : null, role: complete ? profile.role : 'consumer'
+      profile: complete ? profile : null, role: complete && profile.role === 'admin' && session.user.email?.toLowerCase() === 'contact@hamperiasolutions.com' ? 'admin' : 'consumer'
     });
     document.body.dataset.authenticated = String(complete);
     document.body.dataset.role = state.role;
@@ -107,7 +98,7 @@
       node.textContent = state.role === 'admin' ? 'Admin dashboard' : state.role === 'producer' ? 'Manage products' : 'My account';
     });
     document.querySelectorAll('[data-role-only]').forEach((node) => { node.hidden = !complete || node.dataset.roleOnly !== state.role; });
-    document.querySelectorAll('[data-producer-access]').forEach((node) => { node.hidden = !complete || !['producer', 'admin'].includes(state.role); });
+    document.querySelectorAll('[data-producer-access]').forEach((node) => { node.hidden = true; });
     document.querySelectorAll('[data-auth-required]').forEach((node) => { node.hidden = complete; });
     if (pendingUser) prepareSignup(pendingUser, profile);
     if (typeof window.hamperia.onSession === 'function') await window.hamperia.onSession(state);
@@ -191,11 +182,9 @@
     if (values.password !== values.confirm_password) throw new Error('The passwords do not match.');
     if (values.password.length < 8) throw new Error('Use at least 8 characters for your password.');
     if (!values.full_name.trim()) throw new Error('Enter your name.');
-    if (!['consumer', 'producer'].includes(values.account_type)) throw new Error('Choose Customer or Product host.');
-    if (values.account_type === 'producer' && !values.business_name.trim()) throw new Error('Enter your shop or business name.');
     status('Saving your account…');
-    const metadata = { full_name: values.full_name.trim(), account_type: values.account_type,
-      phone: values.phone.trim(), business_name: values.account_type === 'producer' ? values.business_name.trim() : '',
+    const metadata = { full_name: values.full_name.trim(), account_type: 'consumer',
+      phone: values.phone.trim(), business_name: '',
       signup_submitted: true };
     if (pendingUser) {
       const { error: passwordError } = await client.auth.updateUser({ password: values.password });
@@ -289,7 +278,5 @@
       window.location.assign(url());
     });
   });
-  signupForm?.elements.account_type.addEventListener('change', updateBusinessField);
-  updateBusinessField();
   document.addEventListener('DOMContentLoaded', () => { void init(); });
 }());

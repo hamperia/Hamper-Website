@@ -4,7 +4,11 @@ if (window.location.pathname.endsWith('/index.html')) {
 }
 const menu = document.querySelector('.menu');
 const nav = document.querySelector('.nav-links');
-menu?.addEventListener('click', () => { const open = menu.getAttribute('aria-expanded') !== 'true'; menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('open', open); menu.textContent = open ? 'Close ✕' : 'Menu ☰'; });
+if (menu) {
+ const label = open => { menu.innerHTML = `<span class="menu-word">${open ? 'Close' : 'Menu'}</span><span class="menu-icon" aria-hidden="true">${open ? '✕' : '☰'}</span>`; menu.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); };
+ label(false);
+ menu.addEventListener('click', () => { const open = menu.getAttribute('aria-expanded') !== 'true'; menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('open', open); label(open); });
+}
 document.addEventListener('keydown', event => { if(event.key === 'Escape' && menu?.getAttribute('aria-expanded') === 'true') { menu.click(); menu.focus(); } });
 const form = document.querySelector('#bulk-form');
 if (form) {

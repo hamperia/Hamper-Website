@@ -7,10 +7,11 @@
   const message = (text, type) => { list.innerHTML = `<p class="form-status ${type || ''}">${escapeHtml(text)}</p>`; };
   const ordersSection = document.querySelector('[data-admin-orders]');
   const ordersList = document.querySelector('[data-admin-orders-list]');
+  const primaryAdmin = () => window.hamperia.state.role === 'admin' && window.hamperia.state.user?.email?.toLowerCase() === 'contact@hamperiasolutions.com';
 
   async function loadOrders() {
     if (!ordersSection || !ordersList) return;
-    if (window.hamperia.state.role !== 'admin') { ordersSection.hidden = true; ordersList.textContent = ''; return; }
+    if (!primaryAdmin()) { ordersSection.hidden = true; ordersList.textContent = ''; return; }
     ordersSection.hidden = false;
     const { data, error } = await window.hamperia.client.from('shop_orders')
       .select('id,status,total_paise,delivery_address,created_at,shop_order_items(name,quantity)')
@@ -37,7 +38,7 @@
 
   async function loadProducts() {
     const state = window.hamperia.state;
-    if (!state.user || state.role !== 'admin') { gate.hidden = false; list.hidden = true; return; }
+    if (!primaryAdmin()) { gate.hidden = false; list.hidden = true; return; }
     gate.hidden = true; list.hidden = false;
     const { data, error } = await window.hamperia.client.from('products').select('id, name, description, category, price, image_url, created_at, status').eq('status', 'pending').order('created_at', { ascending: false });
     if (error) return message(`Could not load submissions: ${error.message}`, 'error');
@@ -80,26 +81,5 @@
   window.hamperia.onSession = async (state) => {
     await loadProducts(state);
     await loadOrders();
-    const tools = document.querySelector('[data-admin-tools]');
-    if (tools) tools.hidden = !state.user || state.role !== 'admin';
   };
-
-  const roleForm = document.querySelector('#role-form');
-  const roleStatus = document.querySelector('#role-status');
-  roleForm?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const state = window.hamperia.state;
-    if (state.role !== 'admin') return;
-    const values = Object.fromEntries(new FormData(roleForm).entries());
-    if (values.email.toLowerCase() === window.hamperia.adminEmail) {
-      roleStatus.textContent = 'The primary admin account cannot be changed here.';
-      roleStatus.hidden = false;
-      return;
-    }
-    const { data, error } = await window.hamperia.client.from('profiles').update({ role: values.role }).eq('email', values.email.trim().toLowerCase()).select('email, role').maybeSingle();
-    roleStatus.textContent = error ? `Could not update the role: ${error.message}` : data ? `${data.email} is now a ${data.role}.` : 'No profile was found for that email yet.';
-    roleStatus.className = `form-status ${error ? 'error' : 'success'}`;
-    roleStatus.hidden = false;
-    if (!error) roleForm.reset();
-  });
 }());

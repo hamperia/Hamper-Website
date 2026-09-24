@@ -31,8 +31,9 @@ Deno.serve(async req => {
       unique.add(item.key);
       if (item.key.startsWith('catalog:')) {
         const slug = item.key.slice(8);
-        const { data, error } = await db.from('catalog_products').select('name,price_paise').eq('slug', slug).eq('active', true).maybeSingle();
+        const { data, error } = await db.from('catalog_products').select('name,price_paise,stock_quantity').eq('slug', slug).eq('active', true).maybeSingle();
         if (error || !data) return json({ error: 'A product in your basket is unavailable' }, 409);
+        if (data.stock_quantity === null || data.stock_quantity < item.quantity) return json({ error: `${data.name} does not have enough confirmed stock` }, 409);
         lines.push({ product_key: item.key, name: data.name, quantity: item.quantity, unit_price_paise: data.price_paise });
       } else if (item.key.startsWith('maker:')) {
         const id = item.key.slice(6);

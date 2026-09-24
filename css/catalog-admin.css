@@ -1,0 +1,24 @@
+.catalog-admin{background:#fffdf8;border:1px solid var(--line);padding:28px;margin-bottom:34px}
+.catalog-admin .section-heading{margin-bottom:14px}
+.catalog-admin .section-heading p{font-size:13px;line-height:1.5}
+.catalog-editor{background:#f5f3eb;border:1px solid var(--line);padding:24px;margin:20px 0 32px}
+.catalog-editor h3{margin:0 0 20px}
+.catalog-editor .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.catalog-editor .field{display:grid;gap:7px;margin-bottom:18px}
+.catalog-editor input:not([type="checkbox"]),.catalog-editor select,.catalog-editor textarea{width:100%;box-sizing:border-box;border:1px solid #c7c9bc;background:#fffdf8;color:var(--ink);padding:11px;border-radius:3px}
+.catalog-editor .field small,.catalog-tags p{font-size:12px;color:#696c60}
+.catalog-editor label,.catalog-tags legend{font-size:13px;font-weight:600}
+.catalog-tags{border:1px solid var(--line);padding:16px;margin:0 0 18px}
+.catalog-tags>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.catalog-tags label{display:flex;gap:7px;align-items:start;font-weight:400}
+.catalog-tags input:disabled+span{opacity:.5}
+.catalog-publish{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.catalog-editor .form-actions{display:flex;gap:10px;align-items:center}
+.catalog-product-list{display:grid;gap:10px;margin-top:16px}
+.catalog-product-row{display:grid;grid-template-columns:80px minmax(0,1fr) auto;align-items:center;gap:16px;border:1px solid var(--line);padding:12px;background:#fff}
+.catalog-product-photo{width:80px;height:80px;background:#f1eee7}
+.catalog-product-photo img{width:100%;height:100%;object-fit:contain}
+.catalog-product-row h4{font:600 17px Georgia,serif;margin:0 0 5px}
+.catalog-product-row p,.catalog-product-row small{display:block;color:#66695e;font-size:12px;margin:4px 0;line-height:1.5}
+@media(max-width:760px){.catalog-admin{padding:18px}.catalog-editor{padding:16px}.catalog-editor .form-grid,.catalog-tags>div{grid-template-columns:1fr 1fr}.catalog-product-row{grid-template-columns:60px 1fr}.catalog-product-photo{width:60px;height:60px}.catalog-product-row button{grid-column:2;width:max-content}}
+@media(max-width:500px){.catalog-editor .form-grid,.catalog-tags>div{grid-template-columns:1fr}}

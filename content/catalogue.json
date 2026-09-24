@@ -326,32 +326,41 @@
       "slug": "golden-luxury-celebration",
       "name": "Golden Luxury Celebration",
       "price": 2500,
-      "image": "hamper-golden.jpg",
+      "image": "golden-luxury-celebration-v2.png",
       "description": "A celebration assortment with chocolates, a scented candle and a custom card.",
       "category": "hamper",
       "tags": [
         "gift-hampers",
         "chocolate-hampers",
         "client-gifts"
+      ],
+      "contents": [
+        "Assorted chocolates",
+        "Scented candle",
+        "Personal message card"
       ]
     },
     {
       "slug": "festive-wedding-delight",
       "name": "Festive & Wedding Delight",
       "price": 3200,
-      "image": "home_page.jpeg",
+      "image": "festive-wedding-delight-v2.png",
       "description": "Dry-fruit jars, a brass diya and handcrafted chocolates, with presentation confirmed on enquiry.",
       "category": "hamper",
       "tags": [
-        "gift-hampers",
-        "dry-fruit-hampers"
+        "gift-hampers"
+      ],
+      "contents": [
+        "Dry-fruit jars",
+        "Brass diya",
+        "Handcrafted chocolates"
       ]
     },
     {
       "slug": "executive-corporate-box",
       "name": "Executive Corporate Box",
       "price": 1800,
-      "image": "hamper-corporate.jpg",
+      "image": "executive-corporate-box-v2.png",
       "description": "A hardcover planner, metal pen, coaster and coffee for a thoughtful workday gift.",
       "category": "hamper",
       "tags": [
@@ -360,6 +369,12 @@
         "employee-gifts",
         "client-gifts",
         "gourmet-hampers"
+      ],
+      "contents": [
+        "Hardcover planner",
+        "Metal pen",
+        "Coaster",
+        "Coffee"
       ]
     },
     {
@@ -374,6 +389,15 @@
         "onboarding-kits",
         "employee-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Insulated water bottle",
+        "Premium notebook",
+        "Pen",
+        "Insulated tumbler",
+        "T-shirt",
+        "Keychain",
+        "Personalised message card"
       ]
     },
     {
@@ -388,6 +412,12 @@
         "onboarding-kits",
         "employee-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Insulated water bottle",
+        "Notebook",
+        "Pen",
+        "Insulated tumbler"
       ]
     },
     {
@@ -402,6 +432,11 @@
         "onboarding-kits",
         "employee-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Water bottle",
+        "Notebook",
+        "Pen"
       ]
     },
     {
@@ -417,8 +452,16 @@
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
-        "dry-fruit-hampers",
         "wellness-hampers"
+      ],
+      "contents": [
+        "Roasted almonds jar",
+        "Roasted cashews jar",
+        "Premium chocolates",
+        "Scented candle",
+        "Reed diffuser",
+        "Decorative Lakshmi and Ganesh idols",
+        "Festive message card"
       ]
     },
     {
@@ -433,8 +476,16 @@
         "corporate-diwali-gifts",
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
-        "gift-hampers",
-        "dry-fruit-hampers"
+        "gift-hampers"
+      ],
+      "contents": [
+        "Roasted almonds jar",
+        "Roasted cashews jar",
+        "Premium chocolates",
+        "Scented candle",
+        "Reed diffuser",
+        "Decorative Lakshmi and Ganesh idols",
+        "Festive message card"
       ]
     },
     {
@@ -450,9 +501,16 @@
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
-        "dry-fruit-hampers",
         "chocolate-hampers",
         "wellness-hampers"
+      ],
+      "contents": [
+        "Roasted almonds jar",
+        "Roasted cashews jar",
+        "Premium chocolates",
+        "Scented candle",
+        "Reed diffuser",
+        "Festive message card"
       ]
     },
     {
@@ -468,8 +526,14 @@
         "diwali-gifts-for-employees",
         "diwali-gifts-for-clients",
         "gift-hampers",
-        "dry-fruit-hampers",
         "chocolate-hampers"
+      ],
+      "contents": [
+        "Roasted almonds jar",
+        "Roasted cashews jar",
+        "Premium chocolates",
+        "Scented candle",
+        "Festive message card"
       ]
     },
     {
@@ -485,6 +549,10 @@
         "employee-gifts",
         "client-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Gift box",
+        "Two glass jars of dry fruits"
       ]
     },
     {
@@ -500,6 +568,10 @@
         "employee-gifts",
         "client-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Gift box",
+        "Three glass jars of dry fruits"
       ]
     },
     {
@@ -515,6 +587,10 @@
         "employee-gifts",
         "client-gifts",
         "corporate-gifting"
+      ],
+      "contents": [
+        "Gift box",
+        "Four glass jars of dry fruits"
       ]
     },
     {
@@ -524,7 +600,8 @@
       "image": "diy-tray.jpg",
       "description": "A natural base for your own hamper. Confirm dimensions and available finishes before ordering.",
       "category": "container",
-      "tags": []
+      "tags": [],
+      "contents": []
     },
     {
       "slug": "gold-tulle-wrap",
@@ -533,7 +610,8 @@
       "image": "diy-net.jpg",
       "description": "A finishing layer for a handmade hamper. Confirm roll size and available colours in your enquiry.",
       "category": "wrapping",
-      "tags": []
+      "tags": [],
+      "contents": []
     },
     {
       "slug": "paper-filler",
@@ -542,7 +620,8 @@
       "image": "diy-filler.jpg",
       "description": "Arrange and support your gift contents. Pack size and colours are confirmed before ordering.",
       "category": "filler",
-      "tags": []
+      "tags": [],
+      "contents": []
     },
     {
       "slug": "tags-and-ribbons",
@@ -551,7 +630,8 @@
       "image": "diy-tags.jpg",
       "description": "Add a name, message and finishing bow. Confirm quantity and personalisation in your enquiry.",
       "category": "personalisation",
-      "tags": []
+      "tags": [],
+      "contents": []
     }
   ],
   "posts": [
@@ -615,7 +695,7 @@
       "slug": "corporate-gifting-planning-checklist",
       "title": "A practical corporate gifting checklist",
       "summary": "A clear brief for employee, client and festive gifting enquiries.",
-      "image": "hamper-corporate.jpg",
+      "image": "executive-corporate-box-v2.png",
       "sections": [
         [
           "Define the occasion and recipients",
