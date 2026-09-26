@@ -3,6 +3,19 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname,'..');
+test('category guidance uses catalogue prices and product metadata identifies the contents', () => {
+ const {categoryGuide}=require('../scripts/category-guide.cjs');
+ const {productMetadata}=require('../scripts/seo.cjs');
+ const example={slug:'test-box',name:'Example box',price:777,contents:['Notebook','Pen'],description:'A desk gift.'};
+ const guide=categoryGuide({slug:'test-collection',title:'Test gifts'},[example],9900);
+ assert.ok(guide.includes('₹777'));
+ assert.ok(guide.includes('₹99'));
+ assert.ok(guide.includes('../products/test-box/'));
+ assert.ok(productMetadata(example)[1].includes('notebook, pen'));
+ const empty=categoryGuide({slug:'wellness-hampers',title:'Wellness'},[],9900);
+ assert.ok(empty.includes('itemised quotation'));
+ assert.ok(!empty.includes('Infinity'));
+});
 test('sitemap URLs have unique metadata, canonical URLs, valid schema and local assets', () => {
  const xml=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
  const urls=[...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>m[1]);
