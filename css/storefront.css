@@ -7,3 +7,10 @@
 
 .auth-user.profile-menu{display:block;max-width:none}.profile-trigger .auth-user-name{width:auto;font-weight:600}.profile-trigger{white-space:nowrap}.collection-tile h2{font-size:24px}
 @media(min-width:701px) and (max-width:1360px){.nav-links.open{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 24px;padding:12px 0}.nav-links.open>a,.nav-links.open .corporate-menu summary{padding:8px 0}.nav-links.open .corporate-menu[open]{grid-column:1/-1}}
+
+/* Welcome-kit comparison stays readable on smaller screens. */
+.collection-comparison { width:100%; border-collapse:collapse; margin:24px 0; text-align:left; }
+.collection-comparison th,.collection-comparison td { padding:16px; border-bottom:1px solid #dcd5c9; vertical-align:top; }
+.collection-comparison thead { background:#ece8df; }
+.collection-comparison th:first-child { min-width:150px; }
+.collection-comparison td:nth-child(2) { white-space:nowrap; }

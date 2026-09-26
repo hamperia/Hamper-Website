@@ -16,10 +16,10 @@ test('homepage, builder, basket, checkout and assets load through the local serv
       assert.match(response.headers.get('content-type'), /text\/html/, route);
       assert.match(await response.text(), /Hamperia Solutions/, route);
     }
-    for (const asset of ['builder-coffee.png', 'builder-journal.png', 'builder-bottle.png', 'builder-tumbler.png', 'builder-round-box.png', 'builder-magnetic-box.png']) {
+    for (const asset of ['coffee-gift-for-hamper.webp', 'hardcover-journal-for-gift-hamper.webp', 'reusable-water-bottle-gift.webp', 'insulated-tumbler-gift.webp', 'round-gift-box-for-hamper.webp', 'magnetic-closure-gift-box.webp']) {
       const response = await fetch(`${base}/assets/${asset}`);
       assert.equal(response.status, 200, asset);
-      assert.match(response.headers.get('content-type'), /image\/png/, asset);
+      assert.match(response.headers.get('content-type'), /image\/webp/, asset);
     }
     assert.equal((await fetch(`${base}/missing-page/`)).status, 404);
   } finally {

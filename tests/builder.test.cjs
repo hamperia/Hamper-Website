@@ -43,22 +43,22 @@ test('builder requires sign-in and restores saved account choices', async () => 
   const saved = JSON.parse(app.values.get('hamperia_builder_v2:member-a'));
   assert.equal(saved.base, 'magnetic-box');
   assert.deepEqual(saved.contents, ['coffee', 'journal', 'bottle', 'tumbler']);
-  assert.match(app.nodes.visual.innerHTML, /builder-coffee\.png/);
-  assert.match(app.nodes.visual.innerHTML, /builder-journal\.png/);
-  assert.match(app.nodes.visual.innerHTML, /builder-bottle\.png/);
-  assert.match(app.nodes.visual.innerHTML, /builder-tumbler\.png/);
+  assert.match(app.nodes.visual.innerHTML, /coffee-gift-for-hamper\.webp/);
+  assert.match(app.nodes.visual.innerHTML, /hardcover-journal-for-gift-hamper\.webp/);
+  assert.match(app.nodes.visual.innerHTML, /reusable-water-bottle-gift\.webp/);
+  assert.match(app.nodes.visual.innerHTML, /insulated-tumbler-gift\.webp/);
   app.hamperia.beforeSignOutListeners[0]();
-  assert.doesNotMatch(app.nodes.visual.innerHTML, /builder-coffee\.png/);
+  assert.doesNotMatch(app.nodes.visual.innerHTML, /coffee-gift-for-hamper\.webp/);
   await app.hamperia.sessionListeners[0]({ user: { id: 'member-b' } });
-  assert.doesNotMatch(app.nodes.visual.innerHTML, /builder-coffee\.png/);
+  assert.doesNotMatch(app.nodes.visual.innerHTML, /coffee-gift-for-hamper\.webp/);
   await app.hamperia.sessionListeners[0]({ user: { id: 'member-a' } });
-  assert.match(app.nodes.visual.innerHTML, /builder-coffee\.png/);
+  assert.match(app.nodes.visual.innerHTML, /coffee-gift-for-hamper\.webp/);
 });
 
 test('builder shows multiple box types with matching photos', () => {
   const app = builderHarness();
   assert.match(app.nodes.options.innerHTML, /Round gift box/);
-  assert.match(app.nodes.options.innerHTML, /builder-round-box\.png/);
+  assert.match(app.nodes.options.innerHTML, /round-gift-box-for-hamper\.webp/);
   assert.match(app.nodes.options.innerHTML, /Magnetic gift box/);
-  assert.match(app.nodes.options.innerHTML, /builder-magnetic-box\.png/);
+  assert.match(app.nodes.options.innerHTML, /magnetic-closure-gift-box\.webp/);
 });

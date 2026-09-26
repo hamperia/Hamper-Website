@@ -326,7 +326,7 @@
       "slug": "golden-luxury-celebration",
       "name": "Golden Luxury Celebration",
       "price": 2500,
-      "image": "golden-luxury-celebration-v2.png",
+      "image": "golden-chocolate-candle-celebration-hamper.webp",
       "description": "A celebration assortment with chocolates, a scented candle and a custom card.",
       "category": "hamper",
       "tags": [
@@ -338,13 +338,14 @@
         "Assorted chocolates",
         "Scented candle",
         "Personal message card"
-      ]
+      ],
+      "imageAlt": "Golden Luxury Celebration with assorted chocolates, scented candle, personal message card"
     },
     {
       "slug": "festive-wedding-delight",
       "name": "Festive & Wedding Delight",
       "price": 3200,
-      "image": "festive-wedding-delight-v2.png",
+      "image": "festive-wedding-dry-fruit-chocolate-hamper.webp",
       "description": "Dry-fruit jars, a brass diya and handcrafted chocolates, with presentation confirmed on enquiry.",
       "category": "hamper",
       "tags": [
@@ -354,13 +355,14 @@
         "Dry-fruit jars",
         "Brass diya",
         "Handcrafted chocolates"
-      ]
+      ],
+      "imageAlt": "Festive & Wedding Delight with dry-fruit jars, brass diya, handcrafted chocolates"
     },
     {
       "slug": "executive-corporate-box",
       "name": "Executive Corporate Box",
       "price": 1800,
-      "image": "executive-corporate-box-v2.png",
+      "image": "executive-corporate-planner-coffee-gift-box.webp",
       "description": "A hardcover planner, metal pen, coaster and coffee for a thoughtful workday gift.",
       "category": "hamper",
       "tags": [
@@ -375,13 +377,14 @@
         "Metal pen",
         "Coaster",
         "Coffee"
-      ]
+      ],
+      "imageAlt": "Executive Corporate Box with hardcover planner, metal pen, coaster, coffee"
     },
     {
       "slug": "welcome-kit-signature-2999",
       "name": "Signature Welcome Kit",
       "price": 2999,
-      "image": "welcome-kit-2999.png",
+      "image": "signature-employee-welcome-kit-2999.webp",
       "description": "A seven-piece premium branded welcome kit featuring an insulated bottle, notebook, pen, tumbler, T-shirt, keychain and personalised message card. Confirm final branding, sizes, contents and delivery in your quotation.",
       "category": "kit",
       "tags": [
@@ -398,13 +401,14 @@
         "T-shirt",
         "Keychain",
         "Personalised message card"
-      ]
+      ],
+      "imageAlt": "Signature Welcome Kit with insulated water bottle, premium notebook, pen, insulated tumbler, t-shirt, keychain, personalised message card"
     },
     {
       "slug": "welcome-kit-premium-1899",
       "name": "Premium Welcome Kit",
       "price": 1899,
-      "image": "welcome-kit-1899.png",
+      "image": "premium-employee-welcome-kit-1899.webp",
       "description": "A coordinated welcome set with bottle, notebook, pen and tumbler. Ask about the available custom branding, colours and final contents.",
       "category": "kit",
       "tags": [
@@ -418,13 +422,14 @@
         "Notebook",
         "Pen",
         "Insulated tumbler"
-      ]
+      ],
+      "imageAlt": "Premium Welcome Kit with insulated water bottle, notebook, pen, insulated tumbler"
     },
     {
       "slug": "welcome-kit-essential-999",
       "name": "Essential Welcome Kit",
       "price": 999,
-      "image": "welcome-kit-999.png",
+      "image": "essential-employee-welcome-kit-999.webp",
       "description": "A simple new-team welcome set with bottle, notebook and pen. Contents and branding are confirmed before ordering.",
       "category": "kit",
       "tags": [
@@ -437,13 +442,14 @@
         "Water bottle",
         "Notebook",
         "Pen"
-      ]
+      ],
+      "imageAlt": "Essential Welcome Kit with water bottle, notebook, pen"
     },
     {
       "slug": "diwali-premium-3499-green",
       "name": "Diwali Premium Hamper — Green",
       "price": 3499,
-      "image": "diwali-3499-green.png",
+      "image": "green-premium-diwali-gift-hamper-3499.webp",
       "description": "A festive gift box featuring dry fruits, a reed diffuser, candle, decorative idols and a greeting card. Confirm food labels, final contents and availability before ordering.",
       "category": "hamper",
       "tags": [
@@ -462,13 +468,14 @@
         "Reed diffuser",
         "Decorative Lakshmi and Ganesh idols",
         "Festive message card"
-      ]
+      ],
+      "imageAlt": "Diwali Premium Hamper — Green with roasted almonds jar, roasted cashews jar, premium chocolates, scented candle, reed diffuser, decorative lakshmi and ganesh idols, festive message card"
     },
     {
       "slug": "diwali-premium-3499-wine",
       "name": "Diwali Premium Hamper — Wine",
       "price": 3499,
-      "image": "diwali-3499-wine.png",
+      "image": "wine-premium-diwali-gift-hamper-3499.webp",
       "description": "A burgundy festive presentation with assorted gifts, dry fruits, candle, diffuser and greeting card. Final contents are confirmed in your quotation.",
       "category": "hamper",
       "tags": [
@@ -486,14 +493,15 @@
         "Reed diffuser",
         "Decorative Lakshmi and Ganesh idols",
         "Festive message card"
-      ]
+      ],
+      "imageAlt": "Diwali Premium Hamper — Wine with roasted almonds jar, roasted cashews jar, premium chocolates, scented candle, reed diffuser, decorative lakshmi and ganesh idols, festive message card"
     },
     {
       "slug": "diwali-celebration-2499",
       "name": "Diwali Celebration Hamper",
       "price": 2499,
-      "image": "diwali-2499.png",
-      "description": "A festive selection of dry fruits, chocolate, candle, reed diffuser, decorative idols and a message card. Check the final item list and dietary labels before purchase.",
+      "image": "premium-corporate-diwali-gift-hamper-2499.webp",
+      "description": "A festive selection of dry fruits, chocolate, candle, reed diffuser and a message card. Check the final item list and dietary labels before purchase.",
       "category": "hamper",
       "tags": [
         "diwali-gifts",
@@ -511,13 +519,14 @@
         "Scented candle",
         "Reed diffuser",
         "Festive message card"
-      ]
+      ],
+      "imageAlt": "Diwali Celebration Hamper with roasted almonds jar, roasted cashews jar, premium chocolates, scented candle, reed diffuser, festive message card"
     },
     {
       "slug": "diwali-thoughtful-1499",
       "name": "Diwali Thoughtful Hamper",
       "price": 1499,
-      "image": "diwali-1499-wine.png",
+      "image": "wine-diwali-dry-fruit-chocolate-hamper-1499.webp",
       "description": "A smaller festive gift with roasted almonds and cashews, chocolate, candle and a personalised greeting card. Confirm product quantities and food labels before ordering.",
       "category": "hamper",
       "tags": [
@@ -534,13 +543,14 @@
         "Premium chocolates",
         "Scented candle",
         "Festive message card"
-      ]
+      ],
+      "imageAlt": "Diwali Thoughtful Hamper with roasted almonds jar, roasted cashews jar, premium chocolates, scented candle, festive message card"
     },
     {
       "slug": "dry-fruit-two-jar-box",
       "name": "Two-Jar Dry Fruit Box",
       "price": 699,
-      "image": "dry-fruit-two-jar.png",
+      "image": "two-glass-jar-dry-fruit-gift-box-699.webp",
       "description": "A gift box with two glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
       "category": "hamper",
       "tags": [
@@ -553,13 +563,14 @@
       "contents": [
         "Gift box",
         "Two glass jars of dry fruits"
-      ]
+      ],
+      "imageAlt": "Two-Jar Dry Fruit Box with gift box, two glass jars of dry fruits"
     },
     {
       "slug": "dry-fruit-three-jar-box",
       "name": "Three-Jar Dry Fruit Box",
       "price": 1099,
-      "image": "dry-fruit-three-jar.png",
+      "image": "three-glass-jar-dry-fruit-gift-box-1099.webp",
       "description": "A gift box with three glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
       "category": "hamper",
       "tags": [
@@ -572,13 +583,14 @@
       "contents": [
         "Gift box",
         "Three glass jars of dry fruits"
-      ]
+      ],
+      "imageAlt": "Three-Jar Dry Fruit Box with gift box, three glass jars of dry fruits"
     },
     {
       "slug": "dry-fruit-four-jar-box",
       "name": "Four-Jar Dry Fruit Box",
       "price": 1499,
-      "image": "dry-fruit-four-jar.png",
+      "image": "four-glass-jar-dry-fruit-gift-box-1499.webp",
       "description": "A gift box with four glass jars of dry fruits. Assortment and net weights will be confirmed before payment.",
       "category": "hamper",
       "tags": [
@@ -591,47 +603,52 @@
       "contents": [
         "Gift box",
         "Four glass jars of dry fruits"
-      ]
+      ],
+      "imageAlt": "Four-Jar Dry Fruit Box with gift box, four glass jars of dry fruits"
     },
     {
       "slug": "pinewood-crate",
       "name": "Pinewood Crate",
       "price": 350,
-      "image": "diy-tray.jpg",
+      "image": "hamper-base-presentation-inspiration.webp",
       "description": "A natural base for your own hamper. Confirm dimensions and available finishes before ordering.",
       "category": "container",
       "tags": [],
-      "contents": []
+      "contents": [],
+      "imageAlt": "Pinewood Crate — hamper-making supply"
     },
     {
       "slug": "gold-tulle-wrap",
       "name": "Gold Tulle Net Wrapping",
       "price": 250,
-      "image": "diy-net.jpg",
+      "image": "gift-wrapping-presentation-inspiration.webp",
       "description": "A finishing layer for a handmade hamper. Confirm roll size and available colours in your enquiry.",
       "category": "wrapping",
       "tags": [],
-      "contents": []
+      "contents": [],
+      "imageAlt": "Gold Tulle Net Wrapping — hamper-making supply"
     },
     {
       "slug": "paper-filler",
       "name": "Shredded Paper Filler",
       "price": 150,
-      "image": "diy-filler.jpg",
+      "image": "gift-filler-presentation-inspiration.webp",
       "description": "Arrange and support your gift contents. Pack size and colours are confirmed before ordering.",
       "category": "filler",
       "tags": [],
-      "contents": []
+      "contents": [],
+      "imageAlt": "Shredded Paper Filler — hamper-making supply"
     },
     {
       "slug": "tags-and-ribbons",
       "name": "Custom Tags & Satin Ribbons",
       "price": 100,
-      "image": "diy-tags.jpg",
+      "image": "gift-tag-presentation-inspiration.webp",
       "description": "Add a name, message and finishing bow. Confirm quantity and personalisation in your enquiry.",
       "category": "personalisation",
       "tags": [],
-      "contents": []
+      "contents": [],
+      "imageAlt": "Custom Tags & Satin Ribbons — hamper-making supply"
     }
   ],
   "posts": [
@@ -639,7 +656,7 @@
       "slug": "how-to-make-a-gift-hamper",
       "title": "How to make a gift hamper at home",
       "summary": "From the first basket to the final ribbon: a practical guide to making a personal gift.",
-      "image": "home_page.jpeg",
+      "image": "personalised-gift-hamper-inspiration.webp",
       "sections": [
         [
           "Start with one person and one idea",
@@ -667,7 +684,7 @@
       "slug": "hamper-budget-checklist",
       "title": "How to plan a hamper budget",
       "summary": "Count every component so a beautiful gift also stays within your budget.",
-      "image": "category-diy.jpg",
+      "image": "creative-gift-wrapping-inspiration.webp",
       "sections": [
         [
           "Set a total before selecting items",
@@ -695,7 +712,7 @@
       "slug": "corporate-gifting-planning-checklist",
       "title": "A practical corporate gifting checklist",
       "summary": "A clear brief for employee, client and festive gifting enquiries.",
-      "image": "executive-corporate-box-v2.png",
+      "image": "executive-corporate-planner-coffee-gift-box.webp",
       "sections": [
         [
           "Define the occasion and recipients",
@@ -718,6 +735,94 @@
         "corporate-gifting",
         "employee-welcome-kits",
         "corporate-merchandise"
+      ]
+    },
+    {
+      "slug": "corporate-diwali-gifting-guide",
+      "title": "Corporate Diwali gifting: compare contents and plan your order",
+      "summary": "Choose a festive hamper around your recipients, budget and delivery plan, with a clear list of what each box includes.",
+      "image": "premium-corporate-diwali-gift-hamper-2499.webp",
+      "related": [
+        "corporate-diwali-gifts",
+        "diwali-gifts-for-employees",
+        "diwali-gifts-for-clients"
+      ],
+      "sections": [
+        [
+          "Start with the recipients",
+          "Separate employee and client requirements before choosing a hamper. Check gift policies, dietary needs and whether the gifts will reach one office or individual addresses."
+        ],
+        [
+          "Compare the contents, not only the box",
+          "Hamperia’s listed ₹1,499 festive hamper combines almonds, cashews, chocolates, a candle and a message card. The ₹2,499 selection adds a reed diffuser; the ₹3,499 selection also includes decorative Lakshmi and Ganesh idols. Review each product page and confirm quantities, ingredients and presentation before ordering."
+        ],
+        [
+          "Set aside time for personalisation",
+          "Prepare your company logo, message and recipient list before requesting a quote. Ask which branding methods are available for your chosen packaging and approve the artwork before production."
+        ],
+        [
+          "Confirm the delivery plan",
+          "Share quantity, destination and required arrival date. Ask for the current production and delivery estimate rather than assuming a festive deadline. Confirm the final bulk quotation, shipping and any customisation charges in writing."
+        ]
+      ]
+    },
+    {
+      "slug": "employee-welcome-kit-checklist",
+      "title": "Employee welcome kit checklist for new joiners",
+      "summary": "Compare three welcome kits and choose practical items that help a new colleague feel part of the team.",
+      "image": "premium-employee-welcome-kit-1899.webp",
+      "related": [
+        "employee-welcome-kits",
+        "onboarding-kits",
+        "employee-gifts"
+      ],
+      "sections": [
+        [
+          "Choose useful first-day essentials",
+          "Start with items a colleague can use immediately. A notebook, pen and water bottle make a practical base. Keep onboarding documents easy to update and put confidential company information in your internal systems."
+        ],
+        [
+          "Compare the three Hamperia kits",
+          "The Essential kit is listed at ₹999 and contains a bottle, notebook and pen. The Premium kit at ₹1,899 adds an insulated tumbler. The Signature kit at ₹2,999 also includes a T-shirt, keychain and personalised message card. Check the product details for the final contents and available colours."
+        ],
+        [
+          "Prepare names, sizes and artwork",
+          "Check spelling on personalised cards. Collect clothing sizes for kits that include a T-shirt, and ask about available branding methods before approving a company logo placement."
+        ],
+        [
+          "Plan for the next group of joiners",
+          "Ask whether the same contents can be supplied again for future hiring. Record the agreed items and branding so subsequent kits are consistent, and confirm stock and timing for every order."
+        ]
+      ]
+    },
+    {
+      "slug": "bulk-gift-order-planning",
+      "title": "How to plan a bulk gift order for your team or clients",
+      "summary": "Prepare quantities, budget, personalisation and delivery details for a clear corporate gifting quotation.",
+      "image": "executive-corporate-planner-coffee-gift-box.webp",
+      "related": [
+        "corporate-gifting",
+        "employee-gifts",
+        "client-gifts",
+        "corporate-merchandise"
+      ],
+      "sections": [
+        [
+          "Write a short gifting brief",
+          "List the occasion, recipient count, budget per gift and required date. Explain whether you need ready-made hampers, branded merchandise or individual components to assemble yourself."
+        ],
+        [
+          "Choose a manageable number of options",
+          "A small set of gift choices makes approval and packing easier. Separate employee and client options only when their needs differ. Confirm dietary restrictions and any organisation gift policies early."
+        ],
+        [
+          "Compare the complete quotation",
+          "Check the agreed contents, quantity, packaging, branding and delivery charges. Listed individual product prices do not settle the cost of a customised bulk order. Ask for the complete total and the payment terms before confirming."
+        ],
+        [
+          "Approve and keep a record",
+          "Review the final item list, artwork and any agreed sample. Record approved substitutions and delivery arrangements. Share recipient addresses only through the agreed order process and check the shipment against the order when it arrives."
+        ]
       ]
     }
   ]

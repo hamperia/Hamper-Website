@@ -7,28 +7,28 @@
 
   const steps = [
     { key: 'base', number: '01', title: 'Choose a hamper', hint: 'Start with the basket or box you want to fill.', multiple: false, options: [
-      { id: 'woven-basket', name: 'Woven basket', image: 'diy-containers-concept.png' },
-      { id: 'gift-box', name: 'Gift box', image: 'diy-containers-concept.png' },
-      { id: 'magnetic-box', name: 'Magnetic gift box', image: 'builder-magnetic-box.png' },
-      { id: 'round-box', name: 'Round gift box', image: 'builder-round-box.png' },
-      { id: 'wooden-tray', name: 'Wooden tray', image: 'diy-tray.jpg' }
+      { id: 'woven-basket', name: 'Woven basket', image: 'diy-containers-concept.webp' },
+      { id: 'gift-box', name: 'Gift box', image: 'diy-containers-concept.webp' },
+      { id: 'magnetic-box', name: 'Magnetic gift box', image: 'magnetic-closure-gift-box.webp' },
+      { id: 'round-box', name: 'Round gift box', image: 'round-gift-box-for-hamper.webp' },
+      { id: 'wooden-tray', name: 'Wooden tray', image: 'hamper-base-presentation-inspiration.webp' }
     ] },
     { key: 'contents', number: '02', title: 'Choose what goes inside', hint: 'Pick a few things your recipient will enjoy.', multiple: true, options: [
-      { id: 'chocolates', name: 'Chocolates', image: 'chocolate-hamper-concept.png' },
-      { id: 'dry-fruits', name: 'Dry fruits', image: 'dry-fruit-three-jar.png' },
-      { id: 'tea', name: 'Tea', image: 'wellness-hamper-concept.png' },
-      { id: 'candle', name: 'Scented candle', image: 'wellness-hamper-concept.png' },
-      { id: 'journal', name: 'Journal', image: 'builder-journal.png' },
-      { id: 'coffee', name: 'Coffee', image: 'builder-coffee.png' },
-      { id: 'bottle', name: 'Insulated bottle', image: 'builder-bottle.png' },
-      { id: 'tumbler', name: 'Travel tumbler', image: 'builder-tumbler.png' }
+      { id: 'chocolates', name: 'Chocolates', image: 'chocolate-hamper-concept.webp' },
+      { id: 'dry-fruits', name: 'Dry fruits', image: 'three-glass-jar-dry-fruit-gift-box-1099.webp' },
+      { id: 'tea', name: 'Tea', image: 'wellness-hamper-concept.webp' },
+      { id: 'candle', name: 'Scented candle', image: 'wellness-hamper-concept.webp' },
+      { id: 'journal', name: 'Journal', image: 'hardcover-journal-for-gift-hamper.webp' },
+      { id: 'coffee', name: 'Coffee', image: 'coffee-gift-for-hamper.webp' },
+      { id: 'bottle', name: 'Insulated bottle', image: 'reusable-water-bottle-gift.webp' },
+      { id: 'tumbler', name: 'Travel tumbler', image: 'insulated-tumbler-gift.webp' }
     ] },
     { key: 'decor', number: '03', title: 'Choose decorative items', hint: 'Finish it with texture, colour and a message.', multiple: true, options: [
-      { id: 'ribbon', name: 'Satin ribbon', image: 'diy-tags.jpg' },
-      { id: 'tulle', name: 'Tulle wrap', image: 'diy-net.jpg' },
-      { id: 'filler', name: 'Paper filler', image: 'diy-filler.jpg' },
-      { id: 'flowers', name: 'Dried flowers', image: 'wellness-hamper-concept.png' },
-      { id: 'name-tag', name: 'Name tag', image: 'diy-tags.jpg' }
+      { id: 'ribbon', name: 'Satin ribbon', image: 'gift-tag-presentation-inspiration.webp' },
+      { id: 'tulle', name: 'Tulle wrap', image: 'gift-wrapping-presentation-inspiration.webp' },
+      { id: 'filler', name: 'Paper filler', image: 'gift-filler-presentation-inspiration.webp' },
+      { id: 'flowers', name: 'Dried flowers', image: 'wellness-hamper-concept.webp' },
+      { id: 'name-tag', name: 'Name tag', image: 'gift-tag-presentation-inspiration.webp' }
     ] }
   ];
   const byStep = Object.fromEntries(steps.map(step => [step.key, new Map(step.options.map(option => [option.id, option]))]));
@@ -66,9 +66,9 @@
     return `<div class="builder-choice-group"><strong>${title}</strong><div>${entries.length ? entries.map(item => `<span class="builder-selected-chip">${item.name}<button type="button" data-builder-remove-step="${step}" data-builder-remove-id="${item.id}" aria-label="Remove ${item.name} from hamper">Remove ×</button></span>`).join('') : `<span class="builder-empty-choice">${empty}</span>`}</div></div>`;
   }
   function sample() {
-    if (state.contents.has('chocolates')) return ['chocolate-hamper-concept.png', 'A chocolate hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
-    if (state.contents.has('dry-fruits')) return ['dry-fruit-three-jar.png', 'A dry-fruit hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
-    if (state.contents.has('candle') || state.contents.has('tea')) return ['wellness-hamper-concept.png', 'A wellness hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
+    if (state.contents.has('chocolates')) return ['chocolate-hamper-concept.webp', 'A chocolate hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
+    if (state.contents.has('dry-fruits')) return ['three-glass-jar-dry-fruit-gift-box-1099.webp', 'A dry-fruit hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
+    if (state.contents.has('candle') || state.contents.has('tea')) return ['wellness-hamper-concept.webp', 'A wellness hamper inspiration photo', 'Sample hamper inspiration · your final mix will differ'];
     const first = state.contents.values().next().value;
     if (first) {
       const item = byStep.contents.get(first);
@@ -78,7 +78,7 @@
       const item = byStep.base.get(state.base);
       return [item.image, item.name, 'Selected hamper base · add products to continue'];
     }
-    return ['diy-containers-concept.png', 'Empty hamper, gift box and tray inspiration', 'Choose a base and products to begin'];
+    return ['diy-containers-concept.webp', 'Empty hamper, gift box and tray inspiration', 'Choose a base and products to begin'];
   }
   function render() {
     root.querySelectorAll('[data-builder-step]').forEach(button => {

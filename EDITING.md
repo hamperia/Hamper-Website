@@ -6,7 +6,7 @@ This directory is the website repository. GitHub Pages serves the HTML, CSS, Jav
 
 - `scripts/build-storefront.cjs`: shared navigation/footer, homepage, collection descriptions, product catalogue and blog articles. Add or edit entries here, then regenerate the pages.
 - `css/storefront.css`: current colours, spacing and responsive storefront layout.
-- `assets/`: images. The homepage uses `home_page.jpeg`; the shared header uses `logo.png`.
+- `assets/`: images. The homepage uses `personalised-gift-hamper-inspiration.webp`; the shared header uses `hamperia-solutions-logo.webp`.
 - `auth/index.html` and `auth/signup/index.html`: sign-in and signup forms.
 - `js/auth.js`: authentication and saved-profile handling.
 - `admin/index.html`, `js/catalog-admin.js`, `css/catalog-admin.css`: the contact account's product, image, tag, price and stock editor.
