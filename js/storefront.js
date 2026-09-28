@@ -18,11 +18,12 @@
   });
   const search = document.querySelector('[data-product-search]');
   const sort = document.querySelector('[data-product-sort]');
-  const cards = [...document.querySelectorAll('[data-product-card]')];
+  const budget = document.querySelector('[data-product-budget]');
   function filterProducts() {
+    const cards = [...document.querySelectorAll('[data-product-card]')];
     const query = (search?.value || '').trim().toLowerCase();
     let count = 0;
-    cards.forEach(card => { card.hidden = !card.dataset.name.includes(query); if (!card.hidden) count++; });
+    cards.forEach(card => { card.hidden = !window.hamperiaFilter.matches({text:card.dataset.name,price:card.dataset.price,unavailable:card.dataset.catalogHidden === "true"},query,budget?.value); if (!card.hidden) count++; });
     const sorted = [...cards];
     if (sort?.value === 'low') sorted.sort((a,b) => Number(a.dataset.price)-Number(b.dataset.price));
     if (sort?.value === 'high') sorted.sort((a,b) => Number(b.dataset.price)-Number(a.dataset.price));
@@ -32,7 +33,7 @@
     const empty = document.querySelector('[data-no-results]');
     if (empty) empty.hidden = count !== 0;
   }
-  if (search) { search.addEventListener('input', filterProducts); sort?.addEventListener('change', filterProducts); filterProducts(); }
+  if (search) { search.addEventListener('input', filterProducts); sort?.addEventListener('change', filterProducts); budget?.addEventListener('change',filterProducts); document.addEventListener('hamperia:catalog-updated',filterProducts); filterProducts(); }
   const collection = new URLSearchParams(location.search).get('collection');
   const notes = document.querySelector('#bulk-form textarea');
   if (collection && notes && !notes.value) notes.value = `Interested in: ${collection.slice(0, 200)}\n`;
@@ -63,3 +64,10 @@
   document.head.append(navigationStyles);
   document.head.append(shoppingState);
 })();
+const experienceStyle = document.createElement('link');
+experienceStyle.rel = 'stylesheet';
+experienceStyle.href = new URL('../css/experience.css', document.currentScript.src).href;
+document.head.append(experienceStyle);
+const experienceScript = document.createElement('script');
+experienceScript.src = new URL('./experience.js', document.currentScript.src).href;
+document.head.append(experienceScript);

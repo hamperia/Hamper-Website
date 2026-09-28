@@ -117,9 +117,10 @@
       if (!row) return;
       const fallback = originals.get(slug);
       card.hidden = !row.active || Boolean(collection && !matchesCollection(row, fallback));
+      card.dataset.catalogHidden = String(card.hidden);
       if (card.hidden) return;
       card.dataset.price = Number(row.price_paise) / 100;
-      card.dataset.name = row.name.toLowerCase();
+      card.dataset.name = [row.name,...(row.contents||[]),...(row.tags||[])].join(" ").toLowerCase();
       const image = card.querySelector('img');
       if (image && row.image_url) { image.src = imageFor(row, fallback); image.alt = row.name; }
       const title = card.querySelector('.shop-card-body h3');
@@ -185,6 +186,7 @@
         ? `<p class="eyebrow"><a href="${link('')}">Home</a> / Product</p><div class="product-detail"><div class="product-image-frame"><img src="${escape(product.image)}" alt="${escape(product.name)}" width="700" height="650"></div><div><h1>${escape(product.name)}</h1><h2>${money(product.pricePaise)}</h2><p class="product-stock">${row.stock_quantity === 0 ? 'Out of stock' : row.stock_quantity == null ? 'Stock to confirm' : `${row.stock_quantity} available`}</p>${contentsMarkup(contentsFor(row, originals.get(slug)))}<p>${escape(row.description || originals.get(slug)?.description || '')}</p><div class="commerce-actions detail-actions"><button class="wish-button" type="button" data-wish-key="${escape(product.key)}" data-product-name="${escape(product.name)}" aria-label="Add to wishlist: ${escape(product.name)}">♡</button><button class="add-button" type="button" data-cart-key="${escape(product.key)}" ${row.stock_quantity === 0 ? 'disabled' : ''}>${row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div><a href="${link('hampers/')}">Explore more gifts →</a></div></div>`
         : '<h1>Product unavailable</h1><p>This product is no longer listed. Explore our current collections.</p>';
     }
+    document.dispatchEvent(new CustomEvent('hamperia:catalog-updated'));
   }
 
   async function load() {
