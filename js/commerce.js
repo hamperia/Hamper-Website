@@ -5,6 +5,8 @@
   const link = path => new URL(path, root).href;
   const shopping = window.hamperiaShoppingState.createShoppingState(localStorage);
   const { cart, wishlist } = shopping;
+  const personal = window.hamperiaPersonalisation.createStore(localStorage);
+  window.hamperiaGiftNotes = personal;
   const money = paise => `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const products = new Map();
@@ -87,7 +89,9 @@
 
   function applyCatalog(catalogue, rows) {
     const originals = new Map((catalogue.products || []).map(item => [item.slug, item]));
-    const records = new Map((rows || []).map(row => [row.slug, row]));
+    // Correct the legacy colour label when it still matches the original seeded record.
+    rows = (rows || []).map(row => row.slug === 'diwali-premium-3499-wine' && row.name === 'Diwali Premium Hamper — Wine' ? {...row,name:'Diwali Premium Hamper — Taupe',description:(row.description||'').replace('A burgundy festive presentation','A warm neutral festive presentation')} : row);
+    const records = new Map(rows.map(row => [row.slug, row]));
     const contentsFor = (row, fallback) => row.contents?.length ? row.contents : fallback?.contents || [];
     const contentsMarkup = items => items.length ? `<section class="product-contents" data-product-contents><h3>What's inside</h3><ul>${items.map(item => `<li>${escape(item)}</li>`).join('')}</ul><p class="product-contents-note">Please confirm exact brands, quantities, colours and any substitutions before ordering.</p></section>` : '';
     const imageFor = (row, fallback) => /^https:\/\//i.test(row.image_url || '') ? row.image_url : fallback ? link(`assets/${fallback.image}`) : '';
@@ -159,7 +163,7 @@
         if (row.active) {
           const image = detail.querySelector('img');
           if (image && row.image_url) { image.src = imageFor(row, originals.get(staticSlug)); image.alt = row.name; }
-          const heading = document.querySelector('.collection-intro h1');
+          const heading = document.querySelector('.product-title') || document.querySelector('.collection-intro h1');
           if (heading) heading.textContent = row.name;
           const price = detail.querySelector('h2');
           if (price) price.textContent = money(Number(row.price_paise));
@@ -183,8 +187,20 @@
       const row = records.get(slug);
       const product = products.get(`catalog:${slug}`);
       dynamicDetail.innerHTML = row?.active && product?.image
-        ? `<p class="eyebrow"><a href="${link('')}">Home</a> / Product</p><div class="product-detail"><div class="product-image-frame"><img src="${escape(product.image)}" alt="${escape(product.name)}" width="700" height="650"></div><div><h1>${escape(product.name)}</h1><h2>${money(product.pricePaise)}</h2><p class="product-stock">${row.stock_quantity === 0 ? 'Out of stock' : row.stock_quantity == null ? 'Stock to confirm' : `${row.stock_quantity} available`}</p>${contentsMarkup(contentsFor(row, originals.get(slug)))}<p>${escape(row.description || originals.get(slug)?.description || '')}</p><div class="commerce-actions detail-actions"><button class="wish-button" type="button" data-wish-key="${escape(product.key)}" data-product-name="${escape(product.name)}" aria-label="Add to wishlist: ${escape(product.name)}">♡</button><button class="add-button" type="button" data-cart-key="${escape(product.key)}" ${row.stock_quantity === 0 ? 'disabled' : ''}>${row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div><a href="${link('hampers/')}">Explore more gifts →</a></div></div>`
+        ? `<p class="eyebrow"><a href="${link('')}">Home</a> / Product</p><div class="product-detail"><div class="product-image-frame"><button type="button" class="image-zoom" aria-label="Enlarge product image" data-image-zoom><img src="${escape(product.image)}" alt="${escape(product.name)}" width="700" height="650"><span>Explore the details ↗</span></button></div><div><h1 class="product-title">${escape(product.name)}</h1><h2>${money(product.pricePaise)}</h2><p class="product-stock">${row.stock_quantity === 0 ? 'Out of stock' : row.stock_quantity == null ? 'Stock to confirm' : `${row.stock_quantity} available`}</p>${contentsMarkup(contentsFor(row, originals.get(slug)))}<p>${escape(row.description || originals.get(slug)?.description || '')}</p><div class="commerce-actions detail-actions"><button class="wish-button" type="button" data-wish-key="${escape(product.key)}" data-product-name="${escape(product.name)}" aria-label="Add to wishlist: ${escape(product.name)}">♡</button><button class="add-button" type="button" data-cart-key="${escape(product.key)}" ${row.stock_quantity === 0 ? 'disabled' : ''}>${row.stock_quantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div><a href="${link('hampers/')}">Explore more gifts →</a></div></div>`
         : '<h1>Product unavailable</h1><p>This product is no longer listed. Explore our current collections.</p>';
+    }
+    if (dynamicDetail) {
+      const details = dynamicDetail.querySelector('.product-detail > div:last-child');
+      const template = document.querySelector('[data-personalisation-template]');
+      const key = 'catalog:' + new URLSearchParams(location.search).get('slug');
+      if(details && template) {
+        const panel=template.content.firstElementChild.cloneNode(true); panel.dataset.personalisation=key;
+        const actions=details.querySelector('.detail-actions');actions.before(panel);
+        const quantity=document.createElement('label');quantity.className='quantity-picker';quantity.innerHTML='Quantity<input data-add-quantity type="number" min="1" max="10" value="1" step="1">';actions.before(quantity);
+        const enquiry=document.createElement('a');enquiry.className='button secondary';enquiry.dataset.productEnquiry=key;enquiry.dataset.productTitle=products.get(key).name;enquiry.href='mailto:contact@hamperiasolutions.com';enquiry.textContent='Enquire about personalisation';actions.after(enquiry);
+        hydratePersonalisation();
+      }
     }
     document.dispatchEvent(new CustomEvent('hamperia:catalog-updated'));
   }
@@ -205,12 +221,14 @@
       client = window.hamperia.client;
       user = window.hamperia.state.user;
       shopping.activate(user?.id);
-      window.hamperia.beforeSignOutListeners.push(() => { shopping.signOut(); user = null; persist(); renderView(); });
+      personal.activate(user?.id); hydratePersonalisation();
+      window.hamperia.beforeSignOutListeners.push(() => { shopping.signOut(); personal.activate(null); hydratePersonalisation(); user = null; persist(); renderView(); });
       window.hamperia.sessionListeners ||= [];
       window.hamperia.sessionListeners.push(async state => {
         if (shopping.userId === (state.user?.id || null)) return;
         user = state.user;
         shopping.activate(user?.id);
+        personal.activate(user?.id); hydratePersonalisation();
         if (user) await syncWishlist();
         persist(); renderView();
       });
@@ -226,11 +244,43 @@
     renderView();
   }
 
+  function hydratePersonalisation() {
+    document.querySelectorAll('[data-personalisation]').forEach(panel => {
+      const saved = personal.get(panel.dataset.personalisation);
+      Object.entries(saved).forEach(([key, value]) => { const field = panel.querySelector(`[name="${key}"]`); if (field) field.value = value; });
+      const status = panel.querySelector('[data-personalisation-status]'); if (status) status.textContent = '';
+    });
+  }
+  function savePersonalisation(key) {
+    const panel = [...document.querySelectorAll('[data-personalisation]')].find(x => x.dataset.personalisation === key);
+    if (!panel) return true;
+    const status = panel.querySelector('[data-personalisation-status]');
+    try {
+      if (!user) { window.hamperia?.promptSignIn('Sign in to save your gift message and branding.'); return false; }
+      const value = Object.fromEntries([...panel.querySelectorAll('input,textarea')].map(field => [field.name, field.value]));
+      const logo = panel.querySelector('[name="logo"]'); if (logo && !logo.checkValidity()) { panel.open = true; logo.reportValidity(); return false; }
+      personal.set(key, value); status.textContent = 'Personalisation saved for this account on this browser.'; return true;
+    } catch (error) { panel.open = true; status.textContent = error.message; return false; }
+  }
+  document.addEventListener('click', event => {
+    const save = event.target.closest('[data-save-personalisation]');
+    if (save) savePersonalisation(save.closest('[data-personalisation]').dataset.personalisation);
+    const enquiry = event.target.closest('[data-product-enquiry]');
+    if (enquiry) {
+      const key = enquiry.dataset.productEnquiry;
+      if (!savePersonalisation(key)) { event.preventDefault(); return; }
+      enquiry.href = `mailto:contact@hamperiasolutions.com?subject=${encodeURIComponent('Gift enquiry: ' + enquiry.dataset.productTitle)}&body=${encodeURIComponent(window.hamperiaPersonalisation.describe(personal.get(key)) + '\n\nPlease confirm customisation costs, availability and delivery.')}`;
+    }
+  });
+  function notesMarkup(key) {
+    const notes = window.hamperiaPersonalisation.describe(personal.get(key));
+    return notes ? `<p class="personalisation-preview">${escape(notes)}</p>` : '';
+  }
   function itemMarkup(product, quantity, mode) {
     const unavailable = !product;
     const key = product?.key || quantity.key;
     if (unavailable) return `<article class="commerce-item"><p>This product is no longer available.</p><button type="button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></article>`;
-    return `<article class="commerce-item"><a href="${escape(product.url)}"><img src="${escape(product.image)}" alt="${escape(product.name)}" loading="lazy" width="140" height="140"></a><div><h2><a href="${escape(product.url)}">${escape(product.name)}</a></h2><p>${money(product.pricePaise)}</p>${mode === 'cart' ? `<label>Quantity <input type="number" min="1" max="${Math.min(10, product.stockQuantity ?? 10)}" step="1" value="${quantity.quantity}" data-quantity-key="${escape(key)}"></label><p>Line total: ${money(product.pricePaise * quantity.quantity)}</p>` : `<button type="button" data-cart-key="${escape(key)}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button>`}<button type="button" class="text-button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></div></article>`;
+    return `<article class="commerce-item"><a href="${escape(product.url)}"><img src="${escape(product.image)}" alt="${escape(product.name)}" loading="lazy" width="140" height="140"></a><div><h2><a href="${escape(product.url)}">${escape(product.name)}</a></h2><p>${money(product.pricePaise)}</p>${mode === 'cart' ? notesMarkup(key) : ''}${mode === 'cart' ? `<label>Quantity <input type="number" min="1" max="${Math.min(10, product.stockQuantity ?? 10)}" step="1" value="${quantity.quantity}" data-quantity-key="${escape(key)}"></label><p>Line total: ${money(product.pricePaise * quantity.quantity)}</p>` : `<button type="button" data-cart-key="${escape(key)}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button>`}<button type="button" class="text-button" data-remove-item="${escape(key)}" data-list="${mode}">Remove</button></div></article>`;
   }
 
   function totals() {
@@ -261,9 +311,10 @@
     const providers = config.providers || {};
     const razorpayReady = Boolean(config.paymentsEnabled && providers.razorpay);
     const payuReady = Boolean(config.paymentsEnabled && providers.payu);
-    const anyReady = razorpayReady || payuReady;
+    const customRequest = entries.some(x => { const p=personal.get(x.key); return p.logo || p.preferences; });
+    const anyReady = (razorpayReady || payuReady) && !customRequest;
     const methods = `<fieldset class="payment-methods"><legend>Choose how to pay</legend><label><input type="radio" name="provider" value="razorpay" ${razorpayReady ? 'checked' : 'disabled'}> Razorpay ${razorpayReady ? '' : '· Coming soon'}</label><label><input type="radio" name="provider" value="payu" ${payuReady && !razorpayReady ? 'checked' : ''} ${payuReady ? '' : 'disabled'}> PayU India ${payuReady ? '' : '· Coming soon'}</label></fieldset>`;
-    view.innerHTML = `<div class="commerce-layout"><form class="checkout-form" data-checkout-form><h2>Delivery address</h2><div class="checkout-fields"><label>Full name<input name="full_name" autocomplete="name" required maxlength="100" value="${escape(window.hamperia?.state.profile?.display_name || '')}"></label><label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></label><label>Address line 1<input name="line1" autocomplete="address-line1" required maxlength="160"></label><label>Address line 2 (optional)<input name="line2" autocomplete="address-line2" maxlength="160"></label><label>City<input name="city" autocomplete="address-level2" required maxlength="80"></label><label>State<input name="state" autocomplete="address-level1" required maxlength="80"></label><label>PIN code<input name="pincode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{6}" required></label><label>Gift note (optional)<textarea name="gift_note" maxlength="250" rows="3"></textarea></label></div>${methods}<p class="checkout-notice" role="status" data-checkout-status>${anyReady ? 'Your payment will be processed by the provider you choose.' : 'Online payment is being set up. Orders cannot be placed yet.'}</p><button class="button" type="submit" ${anyReady ? '' : 'disabled'}>${anyReady ? `Pay ${money(subtotal + config.shippingPaise)}` : 'Checkout coming soon'}</button></form><aside class="commerce-summary"><h2>Your order</h2>${entries.map(x => `<p><span>${escape(x.product.name)} × ${x.quantity}</span><strong>${money(x.product.pricePaise * x.quantity)}</strong></p>`).join('')}<p><span>Flat shipping</span><strong>${money(config.shippingPaise)}</strong></p><p class="commerce-total"><span>Total</span><strong>${money(subtotal + config.shippingPaise)}</strong></p><a href="${link('cart/')}">Edit basket</a></aside></div>`;
+    view.innerHTML = `<div class="commerce-layout"><form class="checkout-form" data-checkout-form><h2>Delivery address</h2><div class="checkout-fields"><label>Full name<input name="full_name" autocomplete="name" required maxlength="100" value="${escape(window.hamperia?.state.profile?.display_name || '')}"></label><label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></label><label>Address line 1<input name="line1" autocomplete="address-line1" required maxlength="160"></label><label>Address line 2 (optional)<input name="line2" autocomplete="address-line2" maxlength="160"></label><label>City<input name="city" autocomplete="address-level2" required maxlength="80"></label><label>State<input name="state" autocomplete="address-level1" required maxlength="80"></label><label>PIN code<input name="pincode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{6}" required></label><label>Gift note (optional)<textarea name="gift_note" maxlength="250" rows="3"></textarea></label></div>${methods}<p class="checkout-notice" role="status" data-checkout-status>${anyReady ? 'Your payment will be processed by the provider you choose.' : customRequest ? 'Your customisation needs a quote before payment. Enquire about this basket using the link below.' : 'Online payment is being set up. Orders cannot be placed yet.'}</p><button class="button" type="submit" ${anyReady ? '' : 'disabled'}>${anyReady ? `Pay ${money(subtotal + config.shippingPaise)}` : 'Checkout coming soon'}</button></form><aside class="commerce-summary"><h2>Your order</h2>${entries.map(x => `<p><span>${escape(x.product.name)} × ${x.quantity}</span><strong>${money(x.product.pricePaise * x.quantity)}</strong></p>${notesMarkup(x.key)}`).join('')}<p><span>Flat shipping</span><strong>${money(config.shippingPaise)}</strong></p><p class="commerce-total"><span>Total</span><strong>${money(subtotal + config.shippingPaise)}</strong></p><a href="${link('cart/')}">Edit basket</a><p><a href="mailto:contact@hamperiasolutions.com?subject=Hamperia%20basket%20enquiry&amp;body=${encodeURIComponent(entries.map(x=>x.product.name+' × '+x.quantity+'\n'+window.hamperiaPersonalisation.describe(personal.get(x.key))).join('\n\n'))}">Enquire about this basket ↗</a></p></aside></div>`;
   }
 
   async function renderOrders(view) {
@@ -308,7 +359,7 @@
       const provider = address.provider;
       if (!['razorpay', 'payu'].includes(provider) || !config.providers?.[provider]) throw new Error('Choose an available payment provider.');
       delete address.provider;
-      const items = [...cart].map(([key, quantity]) => ({ key, quantity }));
+      const items = [...cart].map(([key, quantity]) => ({ key, quantity, personalisation: personal.get(key) }));
       const { data, error } = await client.functions.invoke('create-checkout-order', { body: { items, address, provider } });
       if (error) throw new Error('Checkout could not start. Please try again later.');
       if (data?.provider !== provider) throw new Error('The payment provider did not match. Please try again.');
@@ -354,7 +405,14 @@
     const wish = event.target.closest('[data-wish-key]');
     const add = event.target.closest('[data-cart-key]');
     const remove = event.target.closest('[data-remove-item]');
-    if (wish) {
+    const bundle = event.target.closest('[data-cart-bundle]');
+    if (bundle) {
+      if (!user) { window.hamperia?.promptSignIn('Sign in to add these supplies to your basket.'); return; }
+      try {
+        const next = window.hamperiaPersonalisation.bundleQuantities(cart, bundle.dataset.cartBundle.split(','), products);
+        cart.clear(); next.forEach((q, k) => cart.set(k, q)); persist(); renderView(); notice('Supplies added to your basket.');
+      } catch (error) { notice(error.message); }
+    } else if (wish) {
       if (!user) { window.hamperia?.promptSignIn('Sign in to save products to your wishlist.'); return; }
       const key = wish.dataset.wishKey;
       if (wishlist.has(key)) wishlist.delete(key); else wishlist.add(key);
@@ -366,15 +424,22 @@
       if (!user) { window.hamperia?.promptSignIn('Sign in to add products to your basket.'); return; }
       const key = add.dataset.cartKey;
       if (!products.has(key)) return;
+      const quantityInput = add.closest('.product-detail')?.querySelector('[data-add-quantity]');
+      if (quantityInput && !quantityInput.reportValidity()) return;
+      const quantity = quantityInput ? Number(quantityInput.value) : 1;
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) return;
+      if (!savePersonalisation(key)) return;
       const stock = products.get(key).stockQuantity;
-      if (stock === 0 || (stock !== null && stock !== undefined && (cart.get(key) || 0) >= stock)) { notice('No more stock is available for this item.'); return; }
-      cart.set(key, Math.min(10, (cart.get(key) || 0) + 1)); persist(); renderView(); notice('Added to your basket.');
+      if ((cart.get(key) || 0) + quantity > 10) { notice('You can add up to 10 of each item. Ask us for a larger order.'); return; }
+      if (stock === 0 || (stock !== null && stock !== undefined && (cart.get(key) || 0) + quantity > stock)) { notice('No more stock is available for this item.'); return; }
+      cart.set(key, (cart.get(key) || 0) + quantity); persist(); renderView(); notice('Added to your basket.');
+      if (add.hasAttribute('data-buy-now')) location.assign(link('checkout/'));
     } else if (remove) {
       const key = remove.dataset.removeItem;
       if (remove.dataset.list === 'wishlist') {
         wishlist.delete(key);
         if (client && user) void client.from('wishlist_items').delete().eq('user_id', user.id).eq('product_key', key);
-      } else cart.delete(key);
+      } else { cart.delete(key); personal.remove(key); }
       persist(); renderView();
     } else if (event.target.closest('[data-checkout-signin]')) {
       sessionStorage.setItem('hamperia_after_login', 'checkout/');

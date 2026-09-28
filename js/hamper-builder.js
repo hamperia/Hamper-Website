@@ -43,6 +43,9 @@
   const summary = root.querySelector('[data-builder-summary]');
   const available = root.querySelector('[data-builder-available]');
   const enquiry = root.querySelector('[data-builder-enquiry]');
+  const share = root.querySelector('[data-builder-share]');
+  const imported = root.querySelector('[data-builder-import]');
+  let listedPrices = {};
   const status = document.createElement('p');
   status.className = 'builder-status'; status.role = 'status';
   enquiry.before(status);
@@ -98,12 +101,20 @@
       if (listing) purchasable.set(listing.slug, listing);
       else unlisted.push(item.name);
     });
-    available.innerHTML = selected.length ? `<p class="builder-availability-label">Matching listed supplies</p>${purchasable.size ? `<ul>${[...purchasable.values()].map(item => `<li><a href="../products/${item.slug}/">${item.name} · View & add to basket →</a></li>`).join('')}</ul>` : '<p>No selected pieces have an individual listing yet.</p>'}${unlisted.length ? `<p>Ask us about individual availability for: ${unlisted.join(', ')}.</p>` : ''}` : '<p>Choose pieces above to see available individual supplies.</p>';
+    const priced = [...purchasable.values()].every(x => Number.isFinite(listedPrices[x.slug]));
+    const subtotal = [...purchasable.values()].reduce((sum, x) => sum + (listedPrices[x.slug] || 0), 0);
+    available.innerHTML = selected.length ? `<p class="builder-availability-label">Matching listed supplies</p>${purchasable.size ? `<ul>${[...purchasable.values()].map(item => `<li><a href="../products/${item.slug}/">${item.name} · View & add to basket →</a></li>`).join('')}</ul>${priced ? `<p>Catalogue supplies subtotal: ₹${subtotal.toLocaleString('en-IN')} + ₹99 shipping. Confirm current prices in your basket.</p>` : ''}<button class="button secondary" type="button" data-cart-bundle="${[...purchasable.keys()].map(slug => 'catalog:' + slug).join(',')}">Add listed supplies to basket</button>` : '<p>No selected pieces have an individual listing yet.</p>'}${unlisted.length ? `<p>Ask us about individual availability for: ${unlisted.join(', ')}.</p><p class="form-help">This is not the complete hamper price. Unlisted contents and assembly are quoted separately.</p>` : ''}` : '<p>Choose pieces above to see available individual supplies.</p>';
     const ready = Boolean(state.base && state.contents.size);
     enquiry.setAttribute('aria-disabled', String(!ready));
     enquiry.classList.toggle('is-disabled', !ready);
     const lines = ['Hello Hamperia,', '', 'I would like a custom hamper with:', `Hamper: ${state.base ? byStep.base.get(state.base).name : 'Not selected'}`, `Contents: ${names('contents').join(', ') || 'Not selected'}`, `Decorations: ${names('decor').join(', ') || 'None selected'}`, '', 'Please confirm what is available, the final contents and a price.'];
     enquiry.href = `mailto:contact@hamperiasolutions.com?subject=${encodeURIComponent('My custom hamper idea')}&body=${encodeURIComponent(lines.join('\n'))}`;
+    if (share) {
+      const url = new URL('hamperia/', site);
+      url.searchParams.set('design', JSON.stringify({ base: state.base, contents: [...state.contents], decor: [...state.decor] }));
+      share.dataset.url = url.href;
+      share.disabled = !ready || !builderUser;
+    }
     if (builderUser) try { localStorage.setItem(`hamperia_builder_v2:${builderUser}`, JSON.stringify({ base: state.base, contents: [...state.contents], decor: [...state.decor] })); } catch { /* Private browsing can block storage. */ }
   }
   function loadFor(user) {
@@ -160,10 +171,40 @@
   });
   enquiry.addEventListener('click', event => {
     if (requireAccount()) { event.preventDefault(); return; }
-    if (state.base && state.contents.size) return;
+    if (state.base && state.contents.size) {
+      const panel = root.querySelector('[data-personalisation]');
+      if (panel && window.hamperiaGiftNotes) try {
+        const fields = Object.fromEntries([...panel.querySelectorAll('input,textarea')].map(x => [x.name, x.value]));
+        const notes = window.hamperiaGiftNotes.set('builder', fields);
+        const url = new URL(enquiry.href);
+        url.searchParams.set('body', url.searchParams.get('body') + '\n\n' + window.hamperiaPersonalisation.describe(notes));
+        enquiry.href = url.href;
+      } catch (error) { event.preventDefault(); status.textContent = error.message; }
+      return;
+    }
     event.preventDefault();
     status.textContent = 'Choose a hamper and at least one product before requesting your quote.';
   });
+  share?.addEventListener('click', async () => {
+    if (requireAccount()) return;
+    try { await navigator.clipboard.writeText(share.dataset.url); status.textContent = 'Design link copied. Gift messages and logo links are not included.'; }
+    catch { status.textContent = 'Copy your design link: ' + share.dataset.url; }
+  });
+  if (imported && typeof location !== 'undefined') {
+    const shared = new URL(location.href).searchParams.get('design');
+    imported.hidden = !shared;
+    imported.addEventListener('click', () => {
+      if (requireAccount()) return;
+      try {
+        if (shared.length > 2000) throw new Error('Invalid design');
+        const value = JSON.parse(shared);
+        if (!byStep.base.has(value.base) || !Array.isArray(value.contents) || !Array.isArray(value.decor) || value.contents.some(x=>!byStep.contents.has(x)) || value.decor.some(x=>!byStep.decor.has(x))) throw new Error('Invalid design');
+        state.base=value.base; state.contents=new Set(value.contents); state.decor=new Set(value.decor); render();
+        status.textContent='Shared design loaded into your account on this browser.';
+      } catch { status.textContent='This design link is invalid. Please choose your pieces below.'; }
+    });
+  }
+  if (typeof fetch === 'function') fetch(new URL('content/catalogue.json',site)).then(r=>r.json()).then(data=>{ listedPrices=Object.fromEntries(data.products.map(x=>[x.slug,x.price])); render(); }).catch(()=>{});
   render();
   if (window.hamperia) {
     window.hamperia.sessionListeners.push(session => loadFor(session.user));

@@ -46,9 +46,14 @@
   const shoppingState = document.createElement('script');
   shoppingState.src = new URL('./shopping-state.js', scriptBase).href;
   shoppingState.onload = () => {
+    const personalisation = document.createElement('script');
+    personalisation.src = new URL('./personalisation.js', scriptBase).href;
+    personalisation.onload = () => {
     const commerce = document.createElement('script');
     commerce.src = new URL('./commerce.js', scriptBase).href;
     document.head.append(commerce);
+    };
+    document.head.append(personalisation);
   };
   const commerceStyles = document.createElement('link');
   commerceStyles.rel = 'stylesheet';
@@ -71,3 +76,6 @@ document.head.append(experienceStyle);
 const experienceScript = document.createElement('script');
 experienceScript.src = new URL('./experience.js', document.currentScript.src).href;
 document.head.append(experienceScript);
+
+const studioStyle=document.createElement('link');studioStyle.rel='stylesheet';studioStyle.href=new URL('../css/studio.css',document.currentScript.src).href;document.head.append(studioStyle);
+const studioScript=document.createElement('script');studioScript.src=new URL('./studio.js',document.currentScript.src).href;document.head.append(studioScript);
