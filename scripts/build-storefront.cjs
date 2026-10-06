@@ -229,4 +229,19 @@ fs.writeFileSync(path.join(root,'content/catalogue.json'),JSON.stringify({collec
 fs.writeFileSync(path.join(root,'content/seo-map.csv'),'URL,Primary topic,Page type\n'+Object.values(collections).map(c=>'/'+c.slug+'/,"'+c.title+'",collection').join('\n')+'\n'+posts.map(p=>'/blog/'+p.slug+'/,"'+p.title+'",article').join('\n'));
 // Preserve useful old links while keeping one canonical welcome-kit page.
 write('new-joinee-kits', '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><meta http-equiv="refresh" content="0;url=../employee-welcome-kits/"><link rel="canonical" href="https://hamperiasolutions.com/employee-welcome-kits/"><title>Employee welcome kits | Hamperia</title></head><body><a href="../employee-welcome-kits/">Explore employee welcome kits</a></body></html>');
+function addAnalyticsToPages(directory) {
+ for (const entry of fs.readdirSync(directory,{withFileTypes:true})) {
+  if(entry.name==='.git'||entry.name==='node_modules') continue;
+  const file=path.join(directory,entry.name);
+  if(entry.isDirectory()) { addAnalyticsToPages(file); continue; }
+  if(!entry.isFile()||!entry.name.endsWith('.html')) continue;
+  let html=fs.readFileSync(file,'utf8');
+  if(html.includes('js/analytics-config.js')||!/<\/head>/i.test(html)) continue;
+  const relative=path.relative(path.dirname(file),path.join(root,'js')).replaceAll(path.sep,'/');
+  const prefix=relative?relative+'/':'./';
+  html=html.replace(/<\/head>/i,`<script src="${prefix}analytics-config.js" defer></script><script src="${prefix}analytics.js" defer></script></head>`);
+  fs.writeFileSync(file,html);
+ }
+}
+addAnalyticsToPages(root);
 console.log('Built storefront, '+Object.keys(collections).length+' collections, '+products.length+' product pages and '+posts.length+' articles.');

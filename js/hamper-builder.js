@@ -137,6 +137,12 @@
     window.hamperia?.promptSignIn('Sign in to build and save your personalised hamper.');
     return true;
   }
+  function reportBuilderChange(step, action) {
+    window.hamperiaAnalytics?.send('hamper_builder_change', {
+      step, action, contents_count: state.contents.size, decorations_count: state.decor.size,
+      has_base: Boolean(state.base)
+    });
+  }
   root.addEventListener('click', event => {
     if (!event.target.closest('[data-builder-step], [data-builder-remove-step], [data-builder-clear]')) return;
     if (requireAccount()) return;
@@ -146,6 +152,7 @@
       state.decor.clear();
       status.textContent = '';
       render();
+      reportBuilderChange('all', 'clear');
       return;
     }
     const remove = event.target.closest('[data-builder-remove-step]');
@@ -157,17 +164,20 @@
       } else if (byStep[step]?.has(id)) state[step].delete(id);
       status.textContent = '';
       render();
+      reportBuilderChange(step, 'remove');
       return;
     }
     const button = event.target.closest('[data-builder-step]');
     if (!button) return;
     const { builderStep: step, builderId: id } = button.dataset;
     if (!byStep[step]?.has(id)) return;
+    const wasSelected = picked(step, id);
     if (step === 'base') state.base = state.base === id ? null : id;
     else if (state[step].has(id)) state[step].delete(id);
     else state[step].add(id);
     status.textContent = '';
     render();
+    reportBuilderChange(step, wasSelected ? 'remove' : 'select');
   });
   enquiry.addEventListener('click', event => {
     if (requireAccount()) { event.preventDefault(); return; }

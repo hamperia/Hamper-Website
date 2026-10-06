@@ -14,6 +14,8 @@
   let client = null;
   let user = null;
   let busy = false;
+  let checkoutEventSent = false;
+  const track = (...args) => window.hamperiaAnalytics?.track(...args);
 
   function persist() {
     shopping.save();
@@ -313,6 +315,13 @@
     const payuReady = Boolean(config.paymentsEnabled && providers.payu);
     const customRequest = entries.some(x => { const p=personal.get(x.key); return p.logo || p.preferences; });
     const anyReady = (razorpayReady || payuReady) && !customRequest;
+    if (!checkoutEventSent) {
+      checkoutEventSent = true;
+      window.hamperiaAnalytics?.trackItems('begin_checkout', entries.map(x => ({
+        item_id: x.key.replace(/^(catalog|maker):/, ''), item_name: x.product.name,
+        item_category: x.product.category || 'gift', price: x.product.pricePaise / 100, quantity: x.quantity
+      })), subtotal / 100 + config.shippingPaise / 100);
+    }
     const methods = `<fieldset class="payment-methods"><legend>Choose how to pay</legend><label><input type="radio" name="provider" value="razorpay" ${razorpayReady ? 'checked' : 'disabled'}> Razorpay ${razorpayReady ? '' : '· Coming soon'}</label><label><input type="radio" name="provider" value="payu" ${payuReady && !razorpayReady ? 'checked' : ''} ${payuReady ? '' : 'disabled'}> PayU India ${payuReady ? '' : '· Coming soon'}</label></fieldset>`;
     view.innerHTML = `<div class="commerce-layout"><form class="checkout-form" data-checkout-form><h2>Delivery address</h2><div class="checkout-fields"><label>Full name<input name="full_name" autocomplete="name" required maxlength="100" value="${escape(window.hamperia?.state.profile?.display_name || '')}"></label><label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></label><label>Address line 1<input name="line1" autocomplete="address-line1" required maxlength="160"></label><label>Address line 2 (optional)<input name="line2" autocomplete="address-line2" maxlength="160"></label><label>City<input name="city" autocomplete="address-level2" required maxlength="80"></label><label>State<input name="state" autocomplete="address-level1" required maxlength="80"></label><label>PIN code<input name="pincode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{6}" required></label><label>Gift note (optional)<textarea name="gift_note" maxlength="250" rows="3"></textarea></label></div>${methods}<p class="checkout-notice" role="status" data-checkout-status>${anyReady ? 'Your payment will be processed by the provider you choose.' : customRequest ? 'Your customisation needs a quote before payment. Enquire about this basket using the link below.' : 'Online payment is being set up. Orders cannot be placed yet.'}</p><button class="button" type="submit" ${anyReady ? '' : 'disabled'}>${anyReady ? `Pay ${money(subtotal + config.shippingPaise)}` : 'Checkout coming soon'}</button></form><aside class="commerce-summary"><h2>Your order</h2>${entries.map(x => `<p><span>${escape(x.product.name)} × ${x.quantity}</span><strong>${money(x.product.pricePaise * x.quantity)}</strong></p>${notesMarkup(x.key)}`).join('')}<p><span>Flat shipping</span><strong>${money(config.shippingPaise)}</strong></p><p class="commerce-total"><span>Total</span><strong>${money(subtotal + config.shippingPaise)}</strong></p><a href="${link('cart/')}">Edit basket</a><p><a href="mailto:contact@hamperiasolutions.com?subject=Hamperia%20basket%20enquiry&amp;body=${encodeURIComponent(entries.map(x=>x.product.name+' × '+x.quantity+'\n'+window.hamperiaPersonalisation.describe(personal.get(x.key))).join('\n\n'))}">Enquire about this basket ↗</a></p></aside></div>`;
   }
@@ -391,6 +400,14 @@
               body: { order_id: data.order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature }
             });
             if (verificationError || !verified?.paid) { status.textContent = 'Payment is processing. Check Your orders before trying again.'; unlock(); return; }
+            const purchased = [...cart].map(([key, quantity]) => {
+              const product = products.get(key);
+              return product ? { item_id: key.replace(/^(catalog|maker):/, ''), item_name: product.name,
+                item_category: product.category || 'gift', price: product.pricePaise / 100, quantity } : null;
+            }).filter(Boolean);
+            window.hamperiaAnalytics?.send('purchase', { transaction_id: String(data.order_id),
+              value: purchased.reduce((sum, item) => sum + item.price * item.quantity, 0) + config.shippingPaise / 100,
+              shipping: config.shippingPaise / 100, currency: 'INR', items: purchased });
             cart.clear(); persist(); window.location.assign(link('orders/'));
           } catch { status.textContent = 'Payment is processing. Check Your orders before trying again.'; unlock(); }
         },
@@ -411,11 +428,18 @@
       try {
         const next = window.hamperiaPersonalisation.bundleQuantities(cart, bundle.dataset.cartBundle.split(','), products);
         cart.clear(); next.forEach((q, k) => cart.set(k, q)); persist(); renderView(); notice('Supplies added to your basket.');
+        window.hamperiaAnalytics?.trackItems('add_to_cart', bundle.dataset.cartBundle.split(',').map(key => {
+          const product = products.get(key);
+          return product && { item_id: key.replace(/^(catalog|maker):/, ''), item_name: product.name,
+            item_category: product.category || 'gift', price: product.pricePaise / 100, quantity: 1 };
+        }), bundle.dataset.cartBundle.split(',').reduce((sum, key) => sum + (products.get(key)?.pricePaise || 0), 0) / 100);
       } catch (error) { notice(error.message); }
     } else if (wish) {
       if (!user) { window.hamperia?.promptSignIn('Sign in to save products to your wishlist.'); return; }
       const key = wish.dataset.wishKey;
-      if (wishlist.has(key)) wishlist.delete(key); else wishlist.add(key);
+      const removing = wishlist.has(key);
+      if (removing) wishlist.delete(key); else wishlist.add(key);
+      track(removing ? 'remove_from_wishlist' : 'add_to_wishlist', window.hamperiaAnalytics?.itemByKey(key));
       persist(); renderView();
       if (client && user) void (wishlist.has(key)
         ? client.from('wishlist_items').upsert({ user_id: user.id, product_key: key }, { onConflict: 'user_id,product_key' })
@@ -433,13 +457,21 @@
       if ((cart.get(key) || 0) + quantity > 10) { notice('You can add up to 10 of each item. Ask us for a larger order.'); return; }
       if (stock === 0 || (stock !== null && stock !== undefined && (cart.get(key) || 0) + quantity > stock)) { notice('No more stock is available for this item.'); return; }
       cart.set(key, (cart.get(key) || 0) + quantity); persist(); renderView(); notice('Added to your basket.');
+      const product = products.get(key);
+      track('add_to_cart', { item_id: key.replace(/^(catalog|maker):/, ''), item_name: product.name,
+        item_category: product.category || 'gift', price: product.pricePaise / 100, quantity }, product.pricePaise / 100 * quantity);
       if (add.hasAttribute('data-buy-now')) location.assign(link('checkout/'));
     } else if (remove) {
       const key = remove.dataset.removeItem;
       if (remove.dataset.list === 'wishlist') {
+        track('remove_from_wishlist', window.hamperiaAnalytics?.itemByKey(key));
         wishlist.delete(key);
         if (client && user) void client.from('wishlist_items').delete().eq('user_id', user.id).eq('product_key', key);
-      } else { cart.delete(key); personal.remove(key); }
+      } else {
+        const product=products.get(key), quantity=cart.get(key)||0;
+        if(product&&quantity)track('remove_from_cart',{item_id:key.replace(/^(catalog|maker):/,''),item_name:product.name,item_category:product.category||'gift',price:product.pricePaise/100,quantity},product.pricePaise/100*quantity);
+        cart.delete(key); personal.remove(key);
+      }
       persist(); renderView();
     } else if (event.target.closest('[data-checkout-signin]')) {
       sessionStorage.setItem('hamperia_after_login', 'checkout/');
@@ -449,8 +481,11 @@
     const input = event.target.closest('[data-quantity-key]');
     if (!input) return;
     const maximum = Math.min(10, products.get(input.dataset.quantityKey)?.stockQuantity ?? 10);
+    const previous=cart.get(input.dataset.quantityKey)||1;
     input.value = String(Math.max(1, Math.min(maximum || 1, Number.parseInt(input.value, 10) || 1)));
-    cart.set(input.dataset.quantityKey, Number(input.value)); persist(); renderView();
+    const next=Number(input.value), product=products.get(input.dataset.quantityKey), delta=next-previous;
+    if(product&&delta)track(delta>0?'add_to_cart':'remove_from_cart',{item_id:input.dataset.quantityKey.replace(/^(catalog|maker):/,''),item_name:product.name,item_category:product.category||'gift',price:product.pricePaise/100,quantity:Math.abs(delta)},product.pricePaise/100*Math.abs(delta));
+    cart.set(input.dataset.quantityKey, next); persist(); renderView();
   });
   document.addEventListener('submit', event => {
     if (!event.target.matches('[data-checkout-form]')) return;

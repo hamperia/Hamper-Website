@@ -131,6 +131,8 @@
     if (session?.user && !profile?.registration_completed && processReturn && (intent === 'signup' || isCallback) && !isSignup) {
       window.location.replace(url('auth/signup/'));
     } else if (profile?.registration_completed && processReturn && (isCallback || intent || isSignup)) {
+      if (intent === 'signin') window.hamperiaAnalytics?.send('login', { method: 'google' });
+      else if (intent === 'signup') window.hamperiaAnalytics?.send('sign_up', { method: 'google' });
       window.location.replace(afterLoginUrl());
     }
   }
@@ -175,6 +177,7 @@
       throw new Error('Signup has not been completed. Choose Create an account below to finish registering.');
     }
     await render(data.session, profile);
+    window.hamperiaAnalytics?.send('login', { method: 'email' });
     window.location.assign(afterLoginUrl());
   }
   async function signUp(form) {
@@ -196,6 +199,7 @@
       if (error) throw new Error('Your password was saved, but profile setup failed. Please retry completing signup.');
       form.elements.password.value = '';
       form.elements.confirm_password.value = '';
+      window.hamperiaAnalytics?.send('sign_up', { method: 'google' });
       window.location.assign(afterLoginUrl());
       return;
     }
@@ -211,8 +215,10 @@
     } else if (data.session) {
       await sync(data.session);
       if (!state.user) throw new Error('Your profile is not ready yet. Please retry completing signup.');
+      window.hamperiaAnalytics?.send('sign_up', { method: 'email' });
       window.location.assign(afterLoginUrl());
     } else {
+      if (data.user) window.hamperiaAnalytics?.send('sign_up', { method: 'email' });
       status('Check your email to confirm your account, then sign in. If you already registered, use the Sign in link below.', 'success');
     }
   }
@@ -273,6 +279,7 @@
     if (event.target.closest('[data-signout]')) void run(async () => {
       const { error } = await client.auth.signOut({ scope: 'local' });
       if (error) throw error;
+      window.hamperiaAnalytics?.send('logout', { method: 'email' });
       for (const listener of window.hamperia.beforeSignOutListeners) listener();
       for (const key of ['hamperia_cart_guest_v2', 'hamperia_wishlist_guest_v2', 'hamperia_cart_v1', 'hamperia_wishlist_v1', 'hamperia_builder_v1']) localStorage.removeItem(key);
       window.location.assign(url());
