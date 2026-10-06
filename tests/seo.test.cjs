@@ -53,3 +53,28 @@ test('private pages remain excluded from search and image payload is reduced', (
   assert.equal(bytes.toString('ascii',8,12),'WEBP');
  }
 });
+test('blog index and every article contain substantial, navigable guidance', () => {
+ const catalogue=JSON.parse(fs.readFileSync(path.join(root,'content/catalogue.json'),'utf8'));
+ const posts=catalogue.posts;
+ const index=fs.readFileSync(path.join(root,'blog/index.html'),'utf8');
+ assert.equal(posts.length,10);
+ assert.match(index,/Browse blog topics/);
+ assert.match(index,/min read/);
+ for(const post of posts){
+  const file=path.join(root,'blog',post.slug,'index.html');
+  const html=fs.readFileSync(file,'utf8');
+  const text=[post.title,post.summary,...(post.takeaways||[]),...post.sections.flatMap(section=>[section.heading,...(section.paragraphs||[section[1]])])].join(' ');
+  assert.ok(text.trim().split(/\s+/).length>=300,`${post.slug} should offer a substantive article`);
+  assert.ok(post.sections.length>=4,`${post.slug} needs useful sections`);
+  assert.ok(index.includes(`./${post.slug}/`),`${post.slug} should be discoverable from the blog index`);
+  assert.ok(html.includes(`${post.minutes||5} min read`),`${post.slug} should show reading time`);
+  assert.match(html,/<nav class="article-breadcrumb"/,`${post.slug} should link visitors back to the site`);
+  for(const related of post.related) assert.ok(fs.existsSync(path.join(root,related,'index.html')),`${post.slug}: missing related route ${related}`);
+ }
+ const keywordArticle=posts.find(post=>post.slug==='diwali-gifting-guide');
+ assert.ok(keywordArticle.title.toLowerCase().includes('diwali gifting'));
+ assert.ok(keywordArticle.related.includes('diwali-gifts'));
+ const corporateArticle=posts.find(post=>post.slug==='corporate-gifting-planning-checklist');
+ assert.ok(corporateArticle.title.toLowerCase().includes('corporate gifting'));
+ assert.ok(corporateArticle.related.includes('corporate-gifting'));
+});
