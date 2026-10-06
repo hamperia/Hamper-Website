@@ -1,6 +1,7 @@
 import { cors, identity, json, razorpay, secret } from '../_shared/commerce.ts';
 import { amountRupees, requestHashInput, sha512 } from '../_shared/payu.mjs';
 import { cleanPersonalisation } from '../_shared/personalisation.mjs';
+import { isPaymentProviderEnabled } from '../_shared/payments.mjs';
 
 type CartItem = { key: string; quantity: number; personalisation?: unknown };
 const shippingPaise = 9900;
@@ -17,6 +18,7 @@ Deno.serve(async req => {
     const address = input.address;
     const provider = input.provider;
     if (!['razorpay', 'payu'].includes(provider)) return json({ error: 'Choose a payment provider' }, 400);
+    if (!isPaymentProviderEnabled(provider, Deno.env)) return json({ error: 'Online payments are not available yet' }, 503);
     if (!Array.isArray(items) || !items.length || items.length > 30) return json({ error: 'Invalid basket' }, 400);
     if (!address || typeof address !== 'object') return json({ error: 'Delivery address is required' }, 400);
     for (const field of ['full_name', 'phone', 'line1', 'city', 'state', 'pincode']) {

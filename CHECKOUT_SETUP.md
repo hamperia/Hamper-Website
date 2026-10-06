@@ -1,6 +1,6 @@
 # Hamperia checkout setup
 
-The basket, wishlist, checkout form, and order history are ready for testing. Live payment remains disabled in `content/commerce-config.json` until a merchant account, server secrets, and end-to-end test transactions are available. GitHub Pages serves the public files; Supabase Edge Functions create orders and verify payments. Never put merchant secrets in this repository or the browser.
+The basket, wishlist, checkout form, and order history are ready for testing. Live payment remains disabled in `content/commerce-config.json` until a merchant account, server secrets, and end-to-end test transactions are available. GitHub Pages serves the public files; Supabase Edge Functions create orders and verify payments. Never put merchant secrets in this repository or the browser. Razorpay Checkout includes UPI, cards and net banking, so Hamperia does not need to collect UPI PINs or build a separate UPI payment form. Gateway processing costs are deducted from the merchant settlement; the checkout adds no separate gateway surcharge.
 
 ## Shared setup
 
@@ -11,15 +11,15 @@ The basket, wishlist, checkout form, and order history are ready for testing. Li
 
 ## Razorpay
 
-1. Create and verify a Razorpay merchant account. Start in Test Mode and enable automatic capture for Orders API payments.
-2. Set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and `RAZORPAY_WEBHOOK_SECRET` as Supabase Edge Function secrets.
+1. Create and verify a Razorpay merchant account. Start in Test Mode and enable automatic capture for Orders API payments. Razorpay's public pricing currently advertises a limited new-merchant offer; confirm eligibility, duration and exclusions in the account before relying on it. Standard pricing may apply after the offer.
+2. In Supabase Dashboard → Edge Functions → Secrets, set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`, `PAYMENTS_ENABLED=false`, and `RAZORPAY_ENABLED=false`. Use the Razorpay **Test Mode** API keys first. Never put these values into `content/commerce-config.json`, GitHub, or browser code.
 3. Deploy `razorpay-webhook`. Configure `https://gphkitnnjdqbxgwqtjpl.supabase.co/functions/v1/razorpay-webhook` in Razorpay for the `payment.captured` event, using the same webhook secret. Its raw request body is verified server-side.
-4. Run test payments, including interrupted browser returns and repeated webhooks. Check the payment and order status in both systems. Then enable `providers.razorpay` and `paymentsEnabled` and publish. Replace test keys with live keys only after the test flow succeeds, and verify a small live payment.
+4. Run test payments, including UPI test IDs, interrupted browser returns and repeated webhooks. Check the payment and order status in both systems. Before accepting orders, add the same provider flags as function secrets with `PAYMENTS_ENABLED=true` and `RAZORPAY_ENABLED=true`, then set `paymentsEnabled` and `providers.razorpay` to `true` in `content/commerce-config.json` and publish the site. The Edge Function rejects payment-order creation unless both server-side flags are explicitly enabled. Replace test keys with live keys only after the test flow succeeds, and verify a small live payment.
 
 ## PayU India
 
-1. Create and verify a PayU India merchant account. Obtain test merchant key and salt. Set `PAYU_KEY`, `PAYU_SALT`, and `PAYU_MODE=test` as Supabase Edge Function secrets. For live use, set live credentials and `PAYU_MODE=live`.
+1. Create and verify a PayU India merchant account. Obtain test merchant key and salt. Set `PAYU_KEY`, `PAYU_SALT`, `PAYU_MODE=test`, `PAYMENTS_ENABLED=false`, and `PAYU_ENABLED=false` as Supabase Edge Function secrets. For live use, set live credentials and `PAYU_MODE=live`.
 2. Deploy `payu-return` and `payu-webhook` along with `create-checkout-order`. The browser is sent to PayU Hosted Checkout. Both callbacks validate the response hash and call PayU's Verify Payment API before recording a paid order. The public callback URL is `https://gphkitnnjdqbxgwqtjpl.supabase.co/functions/v1/payu-return`; configure the PayU webhook URL as `https://gphkitnnjdqbxgwqtjpl.supabase.co/functions/v1/payu-webhook` when the merchant dashboard offers payment webhooks. `supabase/config.toml` disables JWT enforcement for these signed gateway callbacks.
-3. Run a complete PayU test payment, failure, and browser-return flow. Check the order amount and payment status in both PayU and Supabase. Then enable `providers.payu` and `paymentsEnabled` and publish. Do not switch `PAYU_MODE` to live until the live credentials and a small live transaction have been checked.
+3. Run a complete PayU test payment, failure, and browser-return flow. Check the order amount and payment status in both PayU and Supabase. Then set `PAYMENTS_ENABLED=true` and `PAYU_ENABLED=true` as server secrets, enable `providers.payu` and `paymentsEnabled` in the site config, and publish. Do not switch `PAYU_MODE` to live until the live credentials and a small live transaction have been checked.
 
 The website cannot activate either provider without merchant credentials. Keep both provider flags `false` until onboarding and verification are complete.
