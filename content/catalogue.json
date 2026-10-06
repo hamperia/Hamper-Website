@@ -49,13 +49,13 @@
       "slug": "corporate-merchandise",
       "title": "Corporate merchandise",
       "heading": "Useful objects. Your brand, thoughtfully placed.",
-      "intro": "Explore logo-ready bottles, tumblers, mugs, keychains, T-shirts and hoodies for teams and events.",
-      "advice": "Choose useful items your recipients will enjoy: drinkware for desks and commutes, clothing for teams, and small keepsakes for events. Match logo placement and branding method to each material.",
+      "intro": "Explore logo-ready drinkware, clothing, keepsakes and electronics gift ideas for teams and events.",
+      "advice": "Choose useful items your recipients will enjoy: drinkware for desks and commutes, clothing for teams, and small keepsakes or tech gifts for events. Match logo placement and branding method to each material.",
       "planning": "Share a clear logo file, garment sizes and preferred colours. Availability, branding technique, sample approval and minimum order quantity must be confirmed before production.",
       "features": [
         "Branded drinkware",
         "Logo-ready clothing",
-        "Keychains and keepsakes"
+        "Electronics gift ideas"
       ],
       "question": "Can you reproduce exact brand colours?",
       "answer": "We will discuss the closest achievable finish for the chosen material. Approve artwork and any agreed sample before ordering."
@@ -711,7 +711,8 @@
       "related": [
         "hamperia",
         "hampers"
-      ]
+      ],
+      "coverImage": "personalised-gift-hamper-inspiration.webp"
     },
     {
       "slug": "hamper-budget-checklist",
@@ -766,7 +767,8 @@
         "shop-by-budget",
         "corporate-gifting",
         "dry-fruit-hampers"
-      ]
+      ],
+      "coverImage": "creative-gift-wrapping-inspiration.webp"
     },
     {
       "slug": "corporate-gifting-planning-checklist",
@@ -822,7 +824,8 @@
         "employee-gifts",
         "client-gifts",
         "corporate-merchandise"
-      ]
+      ],
+      "coverImage": "executive-corporate-planner-coffee-gift-box.webp"
     },
     {
       "slug": "corporate-diwali-gifting-guide",
@@ -870,7 +873,8 @@
             "Before final approval, request one written quote that lists contents, quantities, packaging, personalisation, delivery and payment terms. Confirm how substitutions will be handled if a product becomes unavailable. A clear record makes it easier for your team to approve the order and check what arrives."
           ]
         }
-      ]
+      ],
+      "coverImage": "diwali-green-studio.webp"
     },
     {
       "slug": "employee-welcome-kit-checklist",
@@ -918,7 +922,8 @@
             "Keep the approved contents, artwork and quote together as a repeat-order record. Before each later batch, reconfirm item availability, prices, sizes and branding. The product images illustrate the proposed presentation; ask for final contents and packing details to be confirmed in writing."
           ]
         }
-      ]
+      ],
+      "coverImage": "welcome-premium-studio.webp"
     },
     {
       "slug": "bulk-gift-order-planning",
@@ -967,7 +972,8 @@
             "When the order arrives, check the number of packages and compare the contents with the approved list. Keep the quotation, artwork proof and delivery record together; these details make a repeat order much easier to run."
           ]
         }
-      ]
+      ],
+      "coverImage": "executive-corporate-planner-coffee-gift-box.webp"
     },
     {
       "slug": "dry-fruit-hamper-buying-guide",
@@ -1015,7 +1021,8 @@
             "Food contents and sourcing can change. Treat catalogue images as presentation references and confirm the exact assortment and labels for your order. Do not describe the gift as suitable for a dietary requirement unless every included product and its handling information has been checked."
           ]
         }
-      ]
+      ],
+      "coverImage": "four-glass-jar-dry-fruit-gift-box-1499.webp"
     },
     {
       "slug": "custom-corporate-merchandise-guide",
@@ -1063,7 +1070,8 @@
             "Before production, approve the proof, quantity breakdown and delivery date in writing. If the gifts are for an event, leave time for a sample review and an arrival check. Hamperia can discuss logo-ready bottles, tumblers, mugs, keychains, T-shirts and hoodies; final availability, branding and price are confirmed in the quote."
           ]
         }
-      ]
+      ],
+      "coverImage": "welcome-signature-studio.webp"
     },
     {
       "slug": "choose-a-personalised-gift-hamper",
@@ -1111,7 +1119,8 @@
             "For bulk gifts, personalisation can be planned with a master message and a verified recipient list. Confirm the spelling and the method for sharing names before the artwork is approved. Browse Hamperia’s ready-made hampers or use the store to create a custom hamper brief from individual components."
           ]
         }
-      ]
+      ],
+      "coverImage": "personalised-gift-hamper-inspiration.webp"
     },
     {
       "slug": "diwali-gifting-guide",
@@ -1161,7 +1170,8 @@
             "Review a written quotation with the complete contents, customisation, packing and delivery charges. Approve the message and artwork carefully, then keep the final version with your order. Start early enough to review a sample and allow time for packing and delivery before your celebration."
           ]
         }
-      ]
+      ],
+      "coverImage": "diwali-celebration-studio.webp"
     }
   ]
 }

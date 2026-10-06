@@ -6,7 +6,7 @@ const metadata = {
   'onboarding-kits': ['Employee Onboarding Kits & Welcome Gifts', 'Choose practical onboarding gifts with bottles, notebooks and pens. Compare welcome kits and discuss branded cards and first-day inserts.'],
   'employee-gifts': ['Corporate Gifts for Employees & Team Milestones', 'Compare employee gifts for welcome days, work milestones and team celebrations. Explore practical kits, dry-fruit boxes and custom branding options.'],
   'client-gifts': ['Corporate Client Gifts & Thank-You Hampers', 'Find client thank-you gifts with chocolates, dry fruits and desk essentials. Compare contents and discuss personal notes, branding and order quantities.'],
-  'corporate-merchandise': ['Custom Corporate Merchandise & Branded Gifts', 'Plan branded bottles, tumblers, mugs, keychains, T-shirts and hoodies. Share your logo, quantities and sizes for a corporate merchandise quotation.'],
+  'corporate-merchandise': ['Custom Corporate Merchandise & Branded Gifts', 'Plan branded bottles, apparel and electronics for offices and events. Choose colours, share your logo and message, and request a custom merchandise quote.'],
   '': ['Personalised Gift Hampers & Corporate Gifts', 'Explore personalised gift hampers, corporate gifts and hamper-making supplies. Build your own hamper or discover welcome kits and festive gifts with Hamperia.'],
   'corporate-gifting': ['Corporate Gifts for Employees & Clients', 'Discover corporate gifts for employees and clients, from welcome kits to festive hampers. Discuss your quantity, budget and custom branding with Hamperia.'],
   'corporate-diwali-gifts': ['Corporate Diwali Gift Hampers', 'Explore corporate Diwali hampers with dry fruits, chocolates, candles and more. Compare contents and prices for employee and client gifting.'],
@@ -27,7 +27,7 @@ function schema(slug, title, description, products, posts, collections) {
   const post = posts.find(p => slug === 'blog/'+p.slug);
   if (product) graph.push({'@type':'Product','@id':current+'#product',url:current,name:product.name,description:product.description,image:origin+'/assets/'+product.image,sku:product.slug,brand:{'@type':'Brand',name:'Hamperia'}});
   // Offers are added only when live checkout and current inventory are available.
-  if (post) graph.push({'@type':'BlogPosting',headline:post.title,description:post.summary,image:origin+'/assets/'+post.image,mainEntityOfPage:current,author:{'@type':'Organization',name:'Hamperia Solutions',url:origin+'/'},publisher:{'@id':origin+'/#organization'}});
+  if (post) graph.push({'@type':'BlogPosting',headline:post.title,description:post.summary,image:origin+'/assets/'+(post.coverImage||post.image),mainEntityOfPage:current,author:{'@type':'Organization',name:'Hamperia Solutions',url:origin+'/'},publisher:{'@id':origin+'/#organization'}});
   const collection = collections[slug];
   if (collection || ['hampers','hamperia'].includes(slug)) {
     const items = products.filter(p => collection ? (collection.limit ? p.price < collection.limit : p.tags.includes(slug)) : slug === 'hampers' ? p.category === 'hamper' : !['hamper','kit'].includes(p.category));
